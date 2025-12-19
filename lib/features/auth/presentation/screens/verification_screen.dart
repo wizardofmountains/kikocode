@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:coolicons/coolicons.dart';
 
 class VerificationScreen extends ConsumerStatefulWidget {
   const VerificationScreen({super.key});
@@ -167,8 +168,8 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
                 ? IconButton(
                     icon: Icon(
                       _isPasswordVisible
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                          ? Coolicons.hide
+                          : Coolicons.show,
                       color: Colors.black54,
                     ),
                     onPressed: () {

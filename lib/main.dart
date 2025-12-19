@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kikocode/core/router/app_router.dart';
-import 'package:kikocode/core/widgets/dev_navigation_overlay.dart';
+import 'package:kikocode/core/design_system/design_system.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,21 +27,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'KIKO - Kommunikation kinderleicht!',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFB794F6), // Purple from design
-        ),
-        useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFF5EFE0), // Beige background
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.light,
       routerConfig: appRouter,
-      // Add development navigation overlay in debug mode
-      builder: (context, child) {
-        if (kDebugMode && child != null) {
-          return DevNavigationOverlay(child: child);
-        }
-        return child ?? const SizedBox.shrink();
-      },
     );
   }
 }

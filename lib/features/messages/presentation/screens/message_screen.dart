@@ -1,0 +1,188 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
+import 'package:coolicons/coolicons.dart';
+import '../widgets/message_bubble.dart';
+import '../widgets/message_input.dart';
+
+class MessageScreen extends StatefulWidget {
+  final String groupName;
+  final String groupIcon;
+
+  const MessageScreen({
+    super.key,
+    required this.groupName,
+    required this.groupIcon,
+  });
+
+  @override
+  State<MessageScreen> createState() => _MessageScreenState();
+}
+
+class _MessageScreenState extends State<MessageScreen> {
+  final List<Map<String, dynamic>> _messages = [
+    {
+      'message': 'Hallo zusammen! Wie geht es euch?',
+      'sender': 'David',
+      'time': '09:15',
+      'isCurrentUser': false,
+    },
+    {
+      'message': 'Hallo David! Mir geht es gut, danke! 😊',
+      'sender': 'Anna',
+      'time': '09:17',
+      'isCurrentUser': true,
+    },
+    {
+      'message': 'Super! Hat jemand die Fotos vom letzten Ausflug?',
+      'sender': 'David',
+      'time': '09:18',
+      'isCurrentUser': false,
+    },
+    {
+      'message': 'Ja, ich lade sie gleich hoch!',
+      'sender': 'Maria',
+      'time': '09:20',
+      'isCurrentUser': false,
+    },
+    {
+      'message': 'Danke Maria! Das wäre toll.',
+      'sender': 'Anna',
+      'time': '09:22',
+      'isCurrentUser': true,
+    },
+  ];
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Scroll to bottom after frame is rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToBottom();
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
+  void _handleSendMessage(String message) {
+    setState(() {
+      _messages.add({
+        'message': message,
+        'sender': 'Anna',
+        'time': _getCurrentTime(),
+        'isCurrentUser': true,
+      });
+    });
+    
+    // Scroll to bottom after message is added
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _scrollToBottom();
+    });
+  }
+
+  String _getCurrentTime() {
+    final now = DateTime.now();
+    return '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5EFE0),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Coolicons.chevron_left, color: Colors.black87),
+          onPressed: () => context.pop(),
+        ),
+        title: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE9D5FF),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: Text(
+                  widget.groupIcon,
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                widget.groupName,
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Coolicons.info_circle, color: Colors.black87),
+            onPressed: () => context.push('/message-status'),
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(
+            color: Colors.grey.shade200,
+            height: 1,
+          ),
+        ),
+      ),
+      body: Column(
+        children: [
+          // Messages list
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                final message = _messages[index];
+                return MessageBubble(
+                  message: message['message'],
+                  sender: message['sender'],
+                  time: message['time'],
+                  isCurrentUser: message['isCurrentUser'],
+                );
+              },
+            ),
+          ),
+          
+          // Message input
+          MessageInput(
+            onSendMessage: _handleSendMessage,
+          ),
+        ],
+      ),
+    );
+  }
+}
+

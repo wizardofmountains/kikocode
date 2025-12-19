@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:coolicons/coolicons.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -167,8 +168,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ? IconButton(
                     icon: Icon(
                       _isPasswordVisible
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                          ? Coolicons.hide
+                          : Coolicons.show,
                       color: Colors.black54,
                     ),
                     onPressed: () {

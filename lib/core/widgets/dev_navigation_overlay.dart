@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:coolicons/coolicons.dart';
 
 /// Development-only navigation overlay with forward/backward buttons
 /// Only visible in debug mode
@@ -24,26 +25,24 @@ class DevNavigationOverlay extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
             color: Colors.black87,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Backward button
                   IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    icon: const Icon(Coolicons.chevron_left, color: Colors.white, size: 20),
+                    tooltip: '', // Disable tooltip to avoid Overlay requirement
                     onPressed: () {
-                      if (context.canPop()) {
-                        context.pop();
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Cannot go back'),
-                            duration: Duration(milliseconds: 500),
-                          ),
-                        );
+                      try {
+                        if (context.canPop()) {
+                          context.pop();
+                        }
+                      } catch (e) {
+                        // Silently fail if context doesn't have router
+                        debugPrint('Cannot pop: $e');
                       }
                     },
-                    tooltip: 'Go Back',
                   ),
                   Container(
                     width: 1,
@@ -52,14 +51,14 @@ class DevNavigationOverlay extends StatelessWidget {
                   ),
                   // Forward button (shows available routes)
                   PopupMenuButton<String>(
-                    icon: const Icon(Icons.arrow_forward, color: Colors.white),
-                    tooltip: 'Navigate Forward',
+                    icon: const Icon(Coolicons.chevron_right, color: Colors.white, size: 20),
+                    tooltip: '', // Disable tooltip to avoid Overlay requirement
                     itemBuilder: (context) => [
                       const PopupMenuItem(
                         value: '/',
                         child: Row(
                           children: [
-                            Icon(Icons.home, size: 18),
+                            Icon(Coolicons.home_outline, size: 18),
                             SizedBox(width: 8),
                             Text('Welcome'),
                           ],
@@ -69,7 +68,7 @@ class DevNavigationOverlay extends StatelessWidget {
                         value: '/login',
                         child: Row(
                           children: [
-                            Icon(Icons.login, size: 18),
+                            Icon(Coolicons.user_circle, size: 18),
                             SizedBox(width: 8),
                             Text('Login'),
                           ],
@@ -79,33 +78,70 @@ class DevNavigationOverlay extends StatelessWidget {
                         value: '/verification',
                         child: Row(
                           children: [
-                            Icon(Icons.verified_user, size: 18),
+                            Icon(Coolicons.circle_check, size: 18),
                             SizedBox(width: 8),
                             Text('Verification'),
                           ],
                         ),
                       ),
+                      const PopupMenuItem(
+                        value: '/loading',
+                        child: Row(
+                          children: [
+                            Icon(Coolicons.loading, size: 18),
+                            SizedBox(width: 8),
+                            Text('Loading'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: '/home',
+                        child: Row(
+                          children: [
+                            Icon(Coolicons.grid, size: 18),
+                            SizedBox(width: 8),
+                            Text('Main Screen'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: '/group-selection',
+                        child: Row(
+                          children: [
+                            Icon(Coolicons.user_plus, size: 18),
+                            SizedBox(width: 8),
+                            Text('Group Selection'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: '/messages',
+                        child: Row(
+                          children: [
+                            Icon(Coolicons.message_circle, size: 18),
+                            SizedBox(width: 8),
+                            Text('Messages'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: '/message-status',
+                        child: Row(
+                          children: [
+                            Icon(Coolicons.check_all, size: 18),
+                            SizedBox(width: 8),
+                            Text('Message Status'),
+                          ],
+                        ),
+                      ),
                     ],
                     onSelected: (route) {
-                      context.go(route);
+                      try {
+                        context.go(route);
+                      } catch (e) {
+                        debugPrint('Cannot navigate: $e');
+                      }
                     },
-                  ),
-                  Container(
-                    width: 1,
-                    height: 24,
-                    color: Colors.white24,
-                  ),
-                  // Current route indicator
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text(
-                      _getCurrentRouteName(context),
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -114,20 +150,6 @@ class DevNavigationOverlay extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  String _getCurrentRouteName(BuildContext context) {
-    final location = GoRouterState.of(context).uri.path;
-    switch (location) {
-      case '/':
-        return 'Welcome';
-      case '/login':
-        return 'Login';
-      case '/verification':
-        return 'Verification';
-      default:
-        return location;
-    }
   }
 }
 
