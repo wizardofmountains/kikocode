@@ -126,6 +126,14 @@ class AppSpacing {
     horizontal: spacing4,
     vertical: spacing2,
   );
+  static const EdgeInsets h3v2 = EdgeInsets.symmetric(
+    horizontal: spacing3,
+    vertical: spacing2,
+  );
+  static const EdgeInsets h4v3 = EdgeInsets.symmetric(
+    horizontal: spacing4,
+    vertical: spacing3,
+  );
   static const EdgeInsets h6v3 = EdgeInsets.symmetric(
     horizontal: spacing6,
     vertical: spacing3,

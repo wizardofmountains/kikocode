@@ -15,21 +15,21 @@ class AssetPaths {
   // ===== LOGOS =====
   
   /// Light version of the KIKO logo
-  static const String logoLight = '$_images/LogoLight.svg';
+  static const String logoLight = '$_vectors/logos/logo_light.svg';
   
   /// Dark version of the KIKO logo (add when available)
-  // static const String logoDark = '$_images/logos/logo_dark.svg';
+  // static const String logoDark = '$_vectors/logos/logo_dark.svg';
   
   /// Small logo icon only
   // static const String logoIcon = '$_vectors/logos/logo_icon.svg';
   
   // ===== ICONS =====
   
-  // Add icon paths as they are added to the project
-  // Example:
-  // static const String iconHome = '$_vectors/icons/icon_home.svg';
-  // static const String iconSettings = '$_vectors/icons/icon_settings.svg';
-  // static const String iconProfile = '$_vectors/icons/icon_profile.svg';
+  /// Face ID authentication icon
+  static const String iconFaceId = '$_vectors/icons/face_id_symbol.svg';
+  
+  /// Checkmark circle icon (success indicator)
+  static const String iconCheckmarkCircle = '$_vectors/icons/checkmark_circle.svg';
   
   // ===== ILLUSTRATIONS =====
   

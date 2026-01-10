@@ -233,48 +233,79 @@ class AppColors {
   static const Color pink950 = Color(0xFF500724);
 
   // ============= Semantic Colors (App-specific) =============
-  static const Color primary = purple500;
-  static const Color primaryLight = purple400;
-  static const Color primaryDark = purple600;
+  // KIKO Brand Colors from Figma
+  static const Color primary = Color(0xFFA974C7);      // Primary purple
+  static const Color primary100 = Color(0xFFF3E8FF);   // Very light purple
+  static const Color primary200 = Color(0xFFE9D5FF);   // Light purple
+  static const Color primaryLight = Color(0xFFF5DDFF); // Light purple (from Figma)
+  static const Color primary700 = Color(0xFF7E22CE);   // Dark purple
+  static const Color primaryDark = Color(0xFF8B5BA5);  // Darker purple
+  
+  static const Color secondary = Color(0xFF9ED9C6);    // Mint green/teal
+  static const Color secondary100 = Color(0xFFE0F5F0); // Very light mint
+  static const Color secondary200 = Color(0xFFC4EDE0); // Light mint
+  static const Color secondaryLight = Color(0xFFC4EDE0);
+  static const Color secondary700 = Color(0xFF6BB89F); // Dark mint
+  static const Color secondaryDark = Color(0xFF7CC4AD);
+  
+  static const Color accent = Color(0xFF65B6EC);       // Blue (from logo 'o')
+  static const Color accentYellow = Color(0xFFF4C865); // Yellow (from logo 'k')
 
-  static const Color secondary = indigo500;
-  static const Color secondaryLight = indigo400;
-  static const Color secondaryDark = indigo600;
-
-  static const Color success = green500;
+  static const Color success = Color(0xFF10B981);      // Emerald green
+  static const Color success50 = Color(0xFFECFDF5);    // Very very light green
+  static const Color success100 = Color(0xFFD1FAE5);   // Very light green
+  static const Color success200 = Color(0xFFA7F3D0);   // Light green
   static const Color successLight = green400;
+  static const Color success700 = Color(0xFF047857);   // Dark green
+  static const Color success900 = Color(0xFF064E3B);   // Very dark green
   static const Color successDark = green600;
 
   static const Color warning = amber500;
+  static const Color warning100 = Color(0xFFFEF3C7);   // Very light amber
+  static const Color warning200 = Color(0xFFFDE68A);   // Light amber
   static const Color warningLight = amber400;
+  static const Color warning700 = Color(0xFFB45309);   // Dark amber
   static const Color warningDark = amber600;
 
-  static const Color error = red500;
+  static const Color error = Color(0xFFFF383C);        // KIKO red (from Figma)
+  static const Color error100 = Color(0xFFFEE2E2);     // Very light red
+  static const Color error200 = Color(0xFFFECACA);     // Light red
   static const Color errorLight = red400;
+  static const Color error700 = Color(0xFFB91C1C);     // Dark red
   static const Color errorDark = red600;
 
   static const Color info = sky500;
+  static const Color info100 = Color(0xFFE0F2FE);      // Very light sky
+  static const Color info200 = Color(0xFFBAE6FD);      // Light sky
   static const Color infoLight = sky400;
+  static const Color info700 = Color(0xFF0369A1);      // Dark sky
   static const Color infoDark = sky600;
 
-  // ============= Surface Colors =============
-  static const Color surface = Color(0xFFFFFFFF);
-  static const Color surfaceDim = gray50;
+  // ============= Surface Colors (KIKO Design System) =============
+  static const Color surfaceBase = Color(0xFFF3E7CE);     // Base beige
+  static const Color surfaceHighest = Color(0xFFFBF7EF);  // Lightest surface
+  static const Color surfaceHigh = Color(0xFFF7EFDE);     // Light surface
+  static const Color surfaceLow = Color(0xFFEFDFBD);      // Darker surface/borders
+  
+  // Legacy surface colors (for compatibility)
+  static const Color surface = surfaceHighest;
+  static const Color surfaceDim = surfaceLow;
   static const Color surfaceBright = Color(0xFFFFFFFF);
-  static const Color surfaceContainer = gray100;
-  static const Color surfaceContainerLow = gray50;
-  static const Color surfaceContainerHigh = gray200;
+  static const Color surfaceContainer = surfaceHigh;
+  static const Color surfaceContainerLow = surfaceBase;
+  static const Color surfaceContainerHigh = surfaceLow;
 
-  static const Color background = Color(0xFFF5EFE0); // Beige background from design
-  static const Color backgroundLight = Color(0xFFFAF7F0);
-  static const Color backgroundDark = Color(0xFFEBE3D5);
+  static const Color background = surfaceBase;         // Main background
+  static const Color backgroundLight = surfaceHighest;
+  static const Color backgroundSecondary = surfaceHigh; // Secondary background
+  static const Color backgroundDark = surfaceLow;
 
-  // ============= Text Colors =============
-  static const Color textPrimary = gray900;
+  // ============= Text Colors (KIKO Design System) =============
+  static const Color textPrimary = Color(0xFF242424);  // Dark text from Figma
   static const Color textSecondary = gray700;
-  static const Color textTertiary = gray500;
+  static const Color textTertiary = Color(0xFFBFBFBF); // Caption color from Figma
   static const Color textDisabled = gray400;
-  static const Color textOnPrimary = Color(0xFFFFFFFF);
+  static const Color textOnPrimary = surfaceHighest;   // Text on primary color
   static const Color textOnSecondary = Color(0xFFFFFFFF);
 
   // ============= Border Colors =============

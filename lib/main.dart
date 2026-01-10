@@ -6,11 +6,8 @@ import 'package:kikocode/core/design_system/design_system.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize Supabase (you'll need to add your credentials)
-  // await Supabase.initialize(
-  //   url: 'YOUR_SUPABASE_URL',
-  //   anonKey: 'YOUR_SUPABASE_ANON_KEY',
-  // );
+  // Note: Supabase initialization is now handled by the StartupScreen
+  // via the startup system to ensure proper initialization flow
 
   runApp(
     const ProviderScope(
