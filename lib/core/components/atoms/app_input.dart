@@ -1,0 +1,225 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:kikocode/core/design_system/design_system.dart';
+
+/// Input field size types
+enum AppInputSize {
+  small,
+  medium,
+  large,
+}
+
+/// A reusable text input component with consistent styling
+/// 
+/// Supports various input types, validation, and customization options.
+/// 
+/// Example:
+/// ```dart
+/// AppInput(
+///   label: 'Email',
+///   hintText: 'Enter your email',
+///   prefixIcon: Icons.email,
+///   keyboardType: TextInputType.emailAddress,
+///   onChanged: (value) => print(value),
+/// )
+/// ```
+class AppInput extends StatefulWidget {
+  const AppInput({
+    super.key,
+    this.controller,
+    this.label,
+    this.hintText,
+    this.helperText,
+    this.errorText,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.obscureText = false,
+    this.enabled = true,
+    this.readOnly = false,
+    this.maxLines = 1,
+    this.minLines,
+    this.maxLength,
+    this.keyboardType,
+    this.textInputAction,
+    this.inputFormatters,
+    this.validator,
+    this.onChanged,
+    this.onSubmitted,
+    this.onTap,
+    this.size = AppInputSize.medium,
+    this.autofocus = false,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
+  });
+
+  final TextEditingController? controller;
+  final String? label;
+  final String? hintText;
+  final String? helperText;
+  final String? errorText;
+  final IconData? prefixIcon;
+  final Widget? suffixIcon;
+  final bool obscureText;
+  final bool enabled;
+  final bool readOnly;
+  final int maxLines;
+  final int? minLines;
+  final int? maxLength;
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final List<TextInputFormatter>? inputFormatters;
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
+  final void Function(String)? onSubmitted;
+  final VoidCallback? onTap;
+  final AppInputSize size;
+  final bool autofocus;
+  final bool autocorrect;
+  final bool enableSuggestions;
+
+  @override
+  State<AppInput> createState() => _AppInputState();
+}
+
+class _AppInputState extends State<AppInput> {
+  late bool _obscureText;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscureText = widget.obscureText;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasError = widget.errorText != null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.label != null) ...[
+          Text(
+            widget.label!,
+            style: AppTypography.labelBase.copyWith(
+              color: hasError ? AppColors.error : AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          AppSpacing.v2,
+        ],
+        TextFormField(
+          controller: widget.controller,
+          enabled: widget.enabled,
+          readOnly: widget.readOnly,
+          obscureText: _obscureText,
+          maxLines: _obscureText ? 1 : widget.maxLines,
+          minLines: widget.minLines,
+          maxLength: widget.maxLength,
+          keyboardType: widget.keyboardType,
+          textInputAction: widget.textInputAction,
+          inputFormatters: widget.inputFormatters,
+          validator: widget.validator,
+          onChanged: widget.onChanged,
+          onFieldSubmitted: widget.onSubmitted,
+          onTap: widget.onTap,
+          autofocus: widget.autofocus,
+          autocorrect: widget.autocorrect,
+          enableSuggestions: widget.enableSuggestions,
+          style: _getTextStyle(widget.size),
+          decoration: InputDecoration(
+            hintText: widget.hintText,
+            helperText: widget.helperText,
+            errorText: widget.errorText,
+            prefixIcon: widget.prefixIcon != null
+                ? Icon(widget.prefixIcon, size: _getIconSize(widget.size))
+                : null,
+            suffixIcon: _buildSuffixIcon(),
+            contentPadding: _getContentPadding(widget.size),
+            border: _buildBorder(false),
+            enabledBorder: _buildBorder(false),
+            focusedBorder: _buildBorder(true),
+            errorBorder: _buildBorder(false, error: true),
+            focusedErrorBorder: _buildBorder(true, error: true),
+            filled: true,
+            fillColor: widget.enabled
+                ? AppColors.surface
+                : AppColors.backgroundSecondary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget? _buildSuffixIcon() {
+    if (widget.obscureText) {
+      return IconButton(
+        icon: Icon(
+          _obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+          size: _getIconSize(widget.size),
+        ),
+        onPressed: () {
+          setState(() {
+            _obscureText = !_obscureText;
+          });
+        },
+      );
+    }
+    return widget.suffixIcon;
+  }
+
+  OutlineInputBorder _buildBorder(bool focused, {bool error = false}) {
+    return OutlineInputBorder(
+      borderRadius: AppBorders.lg,
+      borderSide: BorderSide(
+        color: error
+            ? AppColors.error
+            : focused
+                ? AppColors.primary
+                : AppColors.border,
+        width: focused ? 2 : 1,
+      ),
+    );
+  }
+
+  TextStyle _getTextStyle(AppInputSize size) {
+    switch (size) {
+      case AppInputSize.small:
+        return AppTypography.bodySmall;
+      case AppInputSize.medium:
+        return AppTypography.bodyBase;
+      case AppInputSize.large:
+        return AppTypography.bodyLarge;
+    }
+  }
+
+  EdgeInsetsGeometry _getContentPadding(AppInputSize size) {
+    switch (size) {
+      case AppInputSize.small:
+        return AppSpacing.symmetric(
+          horizontal: AppSpacing.spacing3,
+          vertical: AppSpacing.spacing2,
+        );
+      case AppInputSize.medium:
+        return AppSpacing.symmetric(
+          horizontal: AppSpacing.spacing4,
+          vertical: AppSpacing.spacing3,
+        );
+      case AppInputSize.large:
+        return AppSpacing.symmetric(
+          horizontal: AppSpacing.spacing4,
+          vertical: AppSpacing.spacing4,
+        );
+    }
+  }
+
+  double _getIconSize(AppInputSize size) {
+    switch (size) {
+      case AppInputSize.small:
+        return 18;
+      case AppInputSize.medium:
+        return 20;
+      case AppInputSize.large:
+        return 24;
+    }
+  }
+}

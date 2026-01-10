@@ -70,5 +70,28 @@ flutter:
   uses-material-design: true
 
   # Assets
+  # Images (raster)
   assets:
-    - assets/images/LogoLight.svg
+    - assets/images/
+    - assets/images/logos/
+    - assets/images/icons/
+    - assets/images/illustrations/
+    - assets/images/backgrounds/
+    - assets/images/avatars/
+    
+    # Vectors (SVG)
+    - assets/vectors/
+    - assets/vectors/icons/
+    - assets/vectors/logos/
+    - assets/vectors/illustrations/
+    
+    # Animations
+    - assets/animations/
+  
+  # Fonts (if you add custom fonts, define them here)
+  # fonts:
+  #   - family: CustomFont
+  #     fonts:
+  #       - asset: assets/fonts/CustomFont/CustomFont-Regular.ttf
+  #       - asset: assets/fonts/CustomFont/CustomFont-Bold.ttf
+  #         weight: 700

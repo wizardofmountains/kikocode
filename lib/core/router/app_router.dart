@@ -11,6 +11,8 @@ import 'package:kikocode/features/messages/presentation/screens/message_page_scr
 import 'package:kikocode/features/messages/presentation/screens/message_screen.dart';
 import 'package:kikocode/features/messages/presentation/screens/message_status_screen.dart';
 import 'package:kikocode/core/widgets/dev_navigation_overlay.dart';
+import 'package:kikocode/core/components/component_showcase_screen.dart';
+import 'package:kikocode/core/design_system/showcase_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -75,6 +77,17 @@ final GoRouter appRouter = GoRouter(
           path: '/message-status',
           name: 'message-status',
           builder: (context, state) => const MessageStatusScreen(),
+        ),
+        // Developer/Design Routes
+        GoRoute(
+          path: '/showcase/components',
+          name: 'component-showcase',
+          builder: (context, state) => const ComponentShowcaseScreen(),
+        ),
+        GoRoute(
+          path: '/showcase/design-system',
+          name: 'design-system-showcase',
+          builder: (context, state) => const DesignSystemShowcaseScreen(),
         ),
       ],
     ),
