@@ -92,17 +92,21 @@ class _AppInputState extends State<AppInput> {
 
   @override
   Widget build(BuildContext context) {
-    final hasError = widget.errorText != null;
+    final hasError = widget.errorText != null && widget.errorText!.isNotEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.label != null) ...[
-          Text(
-            widget.label!,
-            style: AppTypography.caption2.copyWith( // Use Caption 2 (11px Nunito Sans Regular)
-              color: hasError ? AppColors.error : AppColors.textSecondary,
-              fontWeight: FontWeight.w400,
+        // Show error text as label when there's an error, otherwise show label
+        if (hasError || widget.label != null) ...[
+          Padding(
+            padding: const EdgeInsets.only(left: 20), // 20px left padding to match Figma (42px - 22px field margin)
+            child: Text(
+              hasError ? widget.errorText! : widget.label!,
+              style: AppTypography.caption2.copyWith( // Use Caption 2 (11px Nunito Sans Regular)
+                color: hasError ? AppColors.accentRed : AppColors.textSecondary,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
           AppSpacing.v2,
@@ -129,23 +133,27 @@ class _AppInputState extends State<AppInput> {
           decoration: InputDecoration(
             hintText: widget.hintText,
             helperText: widget.helperText,
-            errorText: (widget.errorText != null && widget.errorText!.isNotEmpty) ? widget.errorText : null,
+            // Don't show errorText below the field - we show it as label above
+            errorText: null,
+            errorStyle: const TextStyle(height: 0), // Hide error text space
             prefixIcon: widget.prefixIcon != null
                 ? Icon(widget.prefixIcon, size: _getIconSize(widget.size))
                 : null,
             suffixIcon: _buildSuffixIcon(),
             contentPadding: _getContentPadding(widget.size),
-            border: _buildBorder(false),
-            enabledBorder: _buildBorder(false),
-            focusedBorder: _buildBorder(true),
+            border: _buildBorder(false, error: hasError),
+            enabledBorder: _buildBorder(false, error: hasError),
+            focusedBorder: _buildBorder(true, error: hasError),
             errorBorder: _buildBorder(false, error: true),
             focusedErrorBorder: _buildBorder(true, error: true),
             filled: true,
             fillColor: widget.enabled
-                ? AppColors.surfaceHighest // Use Surface Highest (#FBF7EF) from Figma
+                ? AppColors.surfaceHighest // Light beige (#FBF7EF) from Figma
                 : AppColors.backgroundSecondary,
             hintStyle: AppTypography.body.copyWith(
-              color: AppColors.textTertiary, // Caption color (#BFBFBF) from Figma
+              color: hasError 
+                  ? AppColors.accentRed.withOpacity(0.4) // Accent/Red at 40% opacity for error state
+                  : AppColors.textTertiary, // Gray (#BFBFBF) for default placeholder
             ),
           ),
         ),
@@ -175,7 +183,7 @@ class _AppInputState extends State<AppInput> {
       borderRadius: BorderRadius.circular(25), // KIKO rounded style: 25px from Figma
       borderSide: BorderSide(
         color: error
-            ? AppColors.error // Red (#FF383C) for error state
+            ? AppColors.accentRed // Accent/Red (#FF383C) from Figma for error state
             : focused
                 ? AppColors.secondary // Mint green (#9ED9C6) for focused/selected state
                 : AppColors.surfaceLow, // Beige (#EFDFBD) for default state

@@ -98,53 +98,33 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             
-            // Username label - top 325px, left 42px
+            // Username field - top 325px, left 22px
+            // Label appears 17px above at top 325px (field at 342px)
             Positioned(
               top: 325,
-              left: 42,
-              child: Text(
-                _usernameError ?? 'Benutzername',
-                style: AppTypography.caption2.copyWith(
-                  color: _usernameError != null ? AppColors.error : AppColors.textTertiary,
-                ),
-              ),
-            ),
-            
-            // Username field - top 342px, left 22px
-            Positioned(
-              top: 342,
               left: 22,
               right: 22,
               child: AppInput(
                 controller: _usernameController,
+                label: 'Benutzername',
                 hintText: 'Benutzername',
-                errorText: _usernameError != null ? '' : null,
+                errorText: _usernameError,
                 size: AppInputSize.medium,
               ),
             ),
             
-            // Password label - top 398px, left 42px
+            // Password field - top 398px, left 22px
+            // Label appears 17px above at top 398px (field at 415px)
             Positioned(
               top: 398,
-              left: 42,
-              child: Text(
-                _passwordError ?? 'Passwort',
-                style: AppTypography.caption2.copyWith(
-                  color: _passwordError != null ? AppColors.error : AppColors.textTertiary,
-                ),
-              ),
-            ),
-            
-            // Password field - top 415px, left 22px
-            Positioned(
-              top: 415,
               left: 22,
               right: 22,
               child: AppInput(
                 controller: _passwordController,
+                label: 'Passwort',
                 hintText: 'Passwort',
                 obscureText: true,
-                errorText: _passwordError != null ? '' : null,
+                errorText: _passwordError,
                 size: AppInputSize.medium,
               ),
             ),

@@ -250,6 +250,7 @@ class AppColors {
   
   static const Color accent = Color(0xFF65B6EC);       // Blue (from logo 'o')
   static const Color accentYellow = Color(0xFFF4C865); // Yellow (from logo 'k')
+  static const Color accentRed = Color(0xFFFF383C);    // Red (Accent/Red from Figma)
 
   static const Color success = Color(0xFF10B981);      // Emerald green
   static const Color success50 = Color(0xFFECFDF5);    // Very very light green
