@@ -1,0 +1,32 @@
+---
+alwaysApply: true
+---
+# Flutter & Dart Development Rules
+
+Expert guidelines for building performant, maintainable, and accessible Flutter applications.
+
+## 1. Core Principles
+- **Style:** Write concise, declarative Dart code. Prefer functional patterns.
+- **Architecture:** Follow a layered approach: Presentation, Domain, Data, and Core.
+- **Composition:** Favor composition over inheritance. Use small, private `Widget` classes instead of helper methods.
+- **Immutability:** Use `StatelessWidget` and `final` fields by default. Use `const` constructors aggressively.
+
+## 2. State Management & Data
+- **Default Choice:** Use built-in solutions (`ValueNotifier`, `ChangeNotifier` with `ListenableBuilder`, or `StreamBuilder`).
+- **Third-Party:** Only use `provider`, `riverpod`, or `bloc` if explicitly requested.
+- **Async:** Use `FutureBuilder` for single hits; `StreamBuilder` for sequences.
+- **DI:** Use manual constructor injection for dependencies.
+
+## 3. Navigation (GoRouter)
+- Use `go_router` for app-level navigation.
+- **Example:**
+  ```dart
+  final router = GoRouter(
+    routes: [
+      GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
+      GoRoute(
+        path: '/details/:id',
+        builder: (context, state) => DetailScreen(id: state.pathParameters['id']!),
+      ),
+    ],
+  );
