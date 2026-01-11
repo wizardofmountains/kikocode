@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:coolicons/coolicons.dart';
+import '../../../../core/design_system/colors.dart';
+import '../../../../core/design_system/spacing.dart';
+import '../../../../core/design_system/kiko_typography.dart';
 
 class MessageInput extends StatefulWidget {
   final Function(String) onSendMessage;
@@ -39,7 +41,13 @@ class _MessageInputState extends State<MessageInput> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surfaceHighest,
+        border: Border(
+          top: BorderSide(
+            color: AppColors.surfaceLow,
+            width: 1,
+          ),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -54,16 +62,20 @@ class _MessageInputState extends State<MessageInput> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5EFE0),
-                  borderRadius: BorderRadius.circular(24),
+                  color: AppColors.surfaceBase,
+                  border: Border.all(
+                    color: AppColors.surfaceLow,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusXxl),
                 ),
                 child: TextField(
                   controller: _controller,
                   decoration: InputDecoration(
                     hintText: 'Nachricht schreiben...',
-                    hintStyle: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: Colors.black45,
+                    hintStyle: KikoTypography.withColor(
+                      KikoTypography.appBody,
+                      AppColors.captionKiko,
                     ),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(
@@ -71,9 +83,9 @@ class _MessageInputState extends State<MessageInput> {
                       vertical: 12,
                     ),
                   ),
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    color: Colors.black87,
+                  style: KikoTypography.withColor(
+                    KikoTypography.appBody,
+                    AppColors.textPrimaryKiko,
                   ),
                   maxLines: null,
                   textCapitalization: TextCapitalization.sentences,
@@ -94,13 +106,13 @@ class _MessageInputState extends State<MessageInput> {
                 height: 44,
                 decoration: BoxDecoration(
                   color: _hasText
-                      ? const Color(0xFFB794F6)
-                      : Colors.grey.shade300,
+                      ? AppColors.primaryKiko
+                      : AppColors.captionKiko,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Coolicons.chevron_right,
-                  color: _hasText ? Colors.white : Colors.grey.shade500,
+                      Icons.send_rounded,
+                  color: AppColors.white,
                   size: 20,
                 ),
               ),

@@ -1,217 +1,236 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:coolicons/coolicons.dart';
+import '../../../../core/design_system/colors.dart';
+import '../../../../core/design_system/spacing.dart';
+import '../../../../core/design_system/kiko_typography.dart';
+import '../widgets/group_message_card.dart';
+import '../widgets/chat_list_item.dart';
 
-class MessageStatusScreen extends StatelessWidget {
+/// Main messages overview screen with group messages and chats
+/// Features: Tab bar navigation, group message status, individual chats
+class MessageStatusScreen extends StatefulWidget {
   const MessageStatusScreen({super.key});
 
-  // Mock data for message status
-  static final List<Map<String, dynamic>> _readReceipts = [
+  @override
+  State<MessageStatusScreen> createState() => _MessageStatusScreenState();
+}
+
+class _MessageStatusScreenState extends State<MessageStatusScreen> {
+  // Mock data for group messages
+  final List<Map<String, dynamic>> _groupMessages = [
     {
-      'name': 'David Schmidt',
-      'initial': 'D',
-      'readTime': '10:32',
-      'status': 'read',
+      'name': 'Laternenwanderung',
+      'received': 10,
+      'total': 20,
+      'progress': 0.50,
     },
     {
-      'name': 'Maria Weber',
-      'initial': 'M',
-      'readTime': '10:35',
-      'status': 'read',
+      'name': 'Gemüsebuffet',
+      'received': 5,
+      'total': 20,
+      'progress': 0.25,
     },
     {
-      'name': 'Thomas Müller',
-      'initial': 'T',
-      'readTime': '10:45',
-      'status': 'read',
-    },
-    {
-      'name': 'Lisa Fischer',
-      'initial': 'L',
-      'readTime': 'Nicht gelesen',
-      'status': 'delivered',
-    },
-    {
-      'name': 'Anna Schmidt',
-      'initial': 'A',
-      'readTime': 'Nicht gelesen',
-      'status': 'delivered',
+      'name': 'Pyjamaparty',
+      'received': 15,
+      'total': 20,
+      'progress': 0.75,
     },
   ];
 
+  // Mock data for chats
+  final List<Map<String, dynamic>> _chats = [
+    {'name': 'Andreas', 'emoji': '👦🏻'},
+    {'name': 'Barbara', 'emoji': '👧🏽'},
+    {'name': 'Kevin', 'emoji': '👦🏼'},
+  ];
+
+
   @override
   Widget build(BuildContext context) {
-    final readCount = _readReceipts.where((r) => r['status'] == 'read').length;
-    final totalCount = _readReceipts.length;
-
     return Scaffold(
-      backgroundColor: const Color(0xFFF5EFE0),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Coolicons.close_big, color: Colors.black87),
-          onPressed: () => context.pop(),
-        ),
-        title: Text(
-          'Nachrichtenstatus',
-          style: GoogleFonts.inter(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-          ),
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(
-            color: Colors.grey.shade200,
-            height: 1,
-          ),
-        ),
-      ),
-      body: Column(
-        children: [
-          // Status summary
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(20),
-            color: Colors.white,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Deine Nachricht',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black54,
+      backgroundColor: AppColors.surfaceBase,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // App Bar with Logo and Profile Picture
+            Container(
+              color: AppColors.surfaceBase,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 25,
+                vertical: 16,
+              ),
+              child: Row(
+                children: [
+                  // Logo
+                  SvgPicture.asset(
+                    'assets/images/LogoLight.svg',
+                    height: 60,
+                    width: 149.76,
                   ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF5EFE0),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    'Danke Maria! Das wäre toll.',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: Colors.black87,
+                  const Spacer(),
+                  
+                  // Profile Picture
+                  CircleAvatar(
+                    radius: 37.5,
+                    backgroundColor: AppColors.gray300,
+                    child: Icon(
+                      Icons.person,
+                      size: 40,
+                      color: AppColors.gray500,
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Icon(
-                      Coolicons.check_all,
-                      size: 20,
-                      color: readCount > 0
-                          ? const Color(0xFF9333EA)
-                          : Colors.grey,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '$readCount von $totalCount gelesen',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: Colors.black54,
+                ],
+              ),
+            ),
+            
+            // Content
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 21),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 12),
+                      
+                      // Title
+                      Text(
+                        'Meine Nachrichten',
+                        style: KikoTypography.withColor(
+                          KikoTypography.appTitle1,
+                          AppColors.primaryKiko,
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 18),
+                      
+                      // Group Messages Card
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceHighest,
+                          border: Border.all(
+                            color: AppColors.surfaceLow,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.cardRadius,
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(25),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Gruppennachrichten',
+                              style: KikoTypography.withColor(
+                                KikoTypography.appHeadline,
+                                AppColors.textPrimaryKiko,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            ..._groupMessages.asMap().entries.map((entry) {
+                              final index = entry.key;
+                              final message = entry.value;
+                              return Column(
+                                children: [
+                                  GroupMessageCard(
+                                    groupName: message['name'],
+                                    receivedCount: message['received'],
+                                    totalCount: message['total'],
+                                    progress: message['progress'],
+                                    onTap: () {
+                                      // Navigate to group message detail
+                                    },
+                                  ),
+                                  if (index < _groupMessages.length - 1)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 58,
+                                        top: 8,
+                                        bottom: 8,
+                                      ),
+                                      child: Container(
+                                        height: 1,
+                                        color: AppColors.surfaceLow,
+                                      ),
+                                    ),
+                                ],
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      
+                      // Chats Card
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceHighest,
+                          border: Border.all(
+                            color: AppColors.surfaceLow,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.cardRadius,
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(25),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Chats',
+                              style: KikoTypography.withColor(
+                                KikoTypography.appHeadline,
+                                AppColors.textPrimaryKiko,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            ..._chats.asMap().entries.map((entry) {
+                              final index = entry.key;
+                              final chat = entry.value;
+                              return Column(
+                                children: [
+                                  ChatListItem(
+                                    name: chat['name'],
+                                    emoji: chat['emoji'],
+                                    onCallTap: () {
+                                      // Handle call
+                                    },
+                                    onInfoTap: () {
+                                      // Show info
+                                    },
+                                  ),
+                                  if (index < _chats.length - 1)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 58,
+                                        top: 8,
+                                        bottom: 8,
+                                      ),
+                                      child: Container(
+                                        height: 1,
+                                        color: AppColors.surfaceLow,
+                                      ),
+                                    ),
+                                ],
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 140), // Space for tab bar
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-          
-          const SizedBox(height: 8),
-          
-          // Read receipts list
-          Expanded(
-            child: Container(
-              color: Colors.white,
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                itemCount: _readReceipts.length,
-                itemBuilder: (context, index) {
-                  final receipt = _readReceipts[index];
-                  return _buildReceiptItem(receipt);
-                },
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildReceiptItem(Map<String, dynamic> receipt) {
-    final isRead = receipt['status'] == 'read';
-    
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.grey.shade200,
-            width: 1,
-          ),
+          ],
         ),
-      ),
-      child: Row(
-        children: [
-          // Avatar
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: const Color(0xFFE9D5FF),
-            child: Text(
-              receipt['initial'],
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF9333EA),
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          
-          // Name
-          Expanded(
-            child: Text(
-              receipt['name'],
-              style: GoogleFonts.inter(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          
-          // Status
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Icon(
-                isRead ? Coolicons.check_all : Coolicons.check,
-                size: 18,
-                color: isRead ? const Color(0xFF9333EA) : Colors.grey,
-              ),
-              const SizedBox(height: 2),
-              Text(
-                receipt['readTime'],
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  color: isRead ? const Color(0xFF9333EA) : Colors.grey,
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
 }
-

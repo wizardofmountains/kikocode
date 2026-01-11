@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:coolicons/coolicons.dart';
+import '../../../../core/design_system/colors.dart';
+import '../../../../core/design_system/kiko_typography.dart';
 import '../widgets/message_bubble.dart';
 import '../widgets/message_input.dart';
 
@@ -104,12 +106,12 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5EFE0),
+      backgroundColor: AppColors.surfaceBase,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.surfaceHighest,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Coolicons.chevron_left, color: Colors.black87),
+          icon: Icon(Coolicons.chevron_left, color: AppColors.textPrimaryKiko),
           onPressed: () => context.pop(),
         ),
         title: Row(
@@ -118,7 +120,7 @@ class _MessageScreenState extends State<MessageScreen> {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: const Color(0xFFE9D5FF),
+                color: AppColors.primaryLightKiko,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
@@ -132,10 +134,9 @@ class _MessageScreenState extends State<MessageScreen> {
             Expanded(
               child: Text(
                 widget.groupName,
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                style: KikoTypography.withColor(
+                  KikoTypography.appBody,
+                  AppColors.textPrimaryKiko,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -144,14 +145,14 @@ class _MessageScreenState extends State<MessageScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Coolicons.info_circle, color: Colors.black87),
+            icon: Icon(Coolicons.info_circle, color: AppColors.textPrimaryKiko),
             onPressed: () => context.push('/message-status'),
           ),
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(
-            color: Colors.grey.shade200,
+            color: AppColors.surfaceLow,
             height: 1,
           ),
         ),

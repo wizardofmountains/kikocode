@@ -11,6 +11,7 @@ import 'package:kikocode/features/messages/presentation/screens/message_page_scr
 import 'package:kikocode/features/messages/presentation/screens/message_screen.dart';
 import 'package:kikocode/features/messages/presentation/screens/message_status_screen.dart';
 import 'package:kikocode/core/widgets/dev_navigation_overlay.dart';
+import 'package:kikocode/core/widgets/main_scaffold.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -47,7 +48,12 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: '/home',
           name: 'home',
-          builder: (context, state) => const MainScreen(),
+          builder: (context, state) {
+            final tabIndex = state.uri.queryParameters['tab'];
+            return MainScaffold(
+              initialTab: tabIndex != null ? int.tryParse(tabIndex) ?? 0 : 0,
+            );
+          },
         ),
         GoRoute(
           path: '/group-selection',
@@ -55,9 +61,19 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) => const GroupSelectionScreen(),
         ),
         GoRoute(
+          path: '/message-compose',
+          name: 'message-compose',
+          builder: (context, state) => const MessagePageScreen(),
+        ),
+        GoRoute(
+          path: '/message-overview',
+          name: 'message-overview',
+          builder: (context, state) => const MessageStatusScreen(),
+        ),
+        GoRoute(
           path: '/messages',
           name: 'messages',
-          builder: (context, state) => const MessagePageScreen(),
+          builder: (context, state) => const MessageStatusScreen(),
         ),
         GoRoute(
           path: '/message/:groupName',
