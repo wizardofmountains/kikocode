@@ -11,7 +11,6 @@ import 'package:kikocode/features/messages/presentation/screens/message_page_scr
 import 'package:kikocode/features/messages/presentation/screens/message_screen.dart';
 import 'package:kikocode/features/messages/presentation/screens/message_status_screen.dart';
 import 'package:kikocode/core/widgets/dev_navigation_overlay.dart';
-import 'package:kikocode/core/widgets/main_scaffold.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -48,12 +47,7 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: '/home',
           name: 'home',
-          builder: (context, state) {
-            final tabIndex = state.uri.queryParameters['tab'];
-            return MainScaffold(
-              initialTab: tabIndex != null ? int.tryParse(tabIndex) ?? 0 : 0,
-            );
-          },
+          builder: (context, state) => const MainScreen(),
         ),
         GoRoute(
           path: '/group-selection',

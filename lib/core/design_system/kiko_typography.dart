@@ -25,7 +25,7 @@ class KikoTypography {
         fontFamily: nunitoSans,
         fontSize: 17.0,
         fontWeight: FontWeight.w700,
-        height: 1.0,
+        height: 1.29, // lineHeight: 129% in Figma
         letterSpacing: 0,
       );
 
@@ -34,7 +34,7 @@ class KikoTypography {
         fontFamily: nunitoSans,
         fontSize: 17.0,
         fontWeight: FontWeight.w400,
-        height: 1.0,
+        height: 1.33, // lineHeight: 133% in Figma
         letterSpacing: 0,
       );
 
@@ -43,7 +43,7 @@ class KikoTypography {
         fontFamily: nunitoSans,
         fontSize: 13.0,
         fontWeight: FontWeight.w400,
-        height: 1.0,
+        height: 1.38, // lineHeight: 138% in Figma
         letterSpacing: 0,
       );
 
@@ -52,7 +52,7 @@ class KikoTypography {
         fontFamily: nunitoSans,
         fontSize: 11.0,
         fontWeight: FontWeight.w400,
-        height: 1.0,
+        height: 1.2, // lineHeight: 120% in Figma
         letterSpacing: 0,
       );
 

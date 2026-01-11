@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:coolicons/coolicons.dart';
 import '../../../../core/design_system/colors.dart';
-import '../../../../core/design_system/spacing.dart';
 import '../../../../core/design_system/kiko_typography.dart';
+import 'shortcut_button.dart';
 
 /// Chat list item with avatar and call/info buttons
 class ChatListItem extends StatelessWidget {
@@ -61,55 +60,10 @@ class ChatListItem extends StatelessWidget {
             ),
           ),
           
-          // Call + Info buttons combined
-          Container(
-            width: 94,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppColors.secondaryKiko,
-              borderRadius: BorderRadius.circular(AppSpacing.radiusXxl),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Call button
-                GestureDetector(
-                  onTap: onCallTap,
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Coolicons.phone,
-                      color: AppColors.surfaceHighest,
-                      size: 18,
-                    ),
-                  ),
-                ),
-                
-                // Divider
-                Container(
-                  width: 1,
-                  height: 28,
-                  color: AppColors.surfaceHighest,
-                ),
-                
-                // Info button
-                GestureDetector(
-                  onTap: onInfoTap,
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Coolicons.info_circle,
-                      color: AppColors.surfaceHighest,
-                      size: 18,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          // Call + Info shortcut button
+          ShortcutButton(
+            onCallTap: onCallTap,
+            onInfoTap: onInfoTap,
           ),
         ],
       ),

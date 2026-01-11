@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../core/design_system/colors.dart';
-import '../../../../core/design_system/spacing.dart';
 import '../../../../core/design_system/kiko_typography.dart';
 import 'loading_indicator.dart';
 
