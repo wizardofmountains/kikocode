@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:coolicons/coolicons.dart';
 import '../../../../core/design_system/colors.dart';
 import '../../../../core/design_system/kiko_typography.dart';
 import '../widgets/group_message_card.dart';
@@ -78,7 +79,160 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
   }
 
   void _onFabPressed() {
-    context.push('/message-compose');
+    _showComposeDialog();
+  }
+
+  void _showComposeDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: AppColors.surfaceHighest,
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Title
+                Text(
+                  'Neue Nachricht',
+                  style: KikoTypography.withColor(
+                    KikoTypography.appHeadline,
+                    AppColors.textPrimaryKiko,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                
+                // Group Message Option
+                _buildComposeOption(
+                  icon: Coolicons.user_circle,
+                  title: 'Gruppennachricht',
+                  description: 'Nachricht an eine oder mehrere Gruppen',
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    context.push('/message-compose');
+                  },
+                ),
+                const SizedBox(height: 16),
+                
+                // Individual Chat Option
+                _buildComposeOption(
+                  icon: Coolicons.message,
+                  title: 'Chat',
+                  description: 'Nachricht an ein einzelnes Kind',
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    // TODO: Navigate to individual chat selection
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Chat-Funktion wird bald verfügbar sein'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 24),
+                
+                // Cancel Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      backgroundColor: AppColors.primaryKiko,
+                      foregroundColor: AppColors.surfaceHighest,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Abbrechen',
+                      style: KikoTypography.withColor(
+                        KikoTypography.appBody,
+                        AppColors.surfaceHighest,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildComposeOption({
+    required IconData icon,
+    required String title,
+    required String description,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceHigh,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColors.surfaceLow,
+            width: 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: AppColors.primaryKiko.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: AppColors.primaryKiko,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: KikoTypography.withColor(
+                      KikoTypography.appBody,
+                      AppColors.textPrimaryKiko,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: KikoTypography.withColor(
+                      KikoTypography.appFootnote,
+                      AppColors.captionKiko,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Coolicons.chevron_right,
+              color: AppColors.captionKiko,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _showPhoneDialog(String name) {
