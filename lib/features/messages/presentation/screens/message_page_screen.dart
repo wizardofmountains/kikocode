@@ -177,13 +177,18 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                   const Spacer(),
                   
                   // Profile Picture
-                  CircleAvatar(
-                    radius: 37.5,
-                    backgroundColor: AppColors.gray300,
-                    child: Icon(
-                      Icons.person,
-                      size: 40,
-                      color: AppColors.gray500,
+                  Container(
+                    width: 75,
+                    height: 75,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.surfaceLow,
+                      image: const DecorationImage(
+                        image: NetworkImage(
+                          'http://localhost:3845/assets/65d3d9833026f2cd571bbbfb21edfa38e4d64489.png',
+                        ),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ],
