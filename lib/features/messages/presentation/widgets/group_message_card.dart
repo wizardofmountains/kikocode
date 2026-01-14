@@ -6,6 +6,7 @@ import 'loading_indicator.dart';
 /// Card displaying group messages with loading progress indicators
 class GroupMessageCard extends StatelessWidget {
   final String groupName;
+  final String? emoji;
   final int receivedCount;
   final int totalCount;
   final double progress; // 0.0 to 1.0
@@ -14,6 +15,7 @@ class GroupMessageCard extends StatelessWidget {
   const GroupMessageCard({
     super.key,
     required this.groupName,
+    this.emoji,
     required this.receivedCount,
     required this.totalCount,
     required this.progress,
@@ -32,7 +34,7 @@ class GroupMessageCard extends StatelessWidget {
             LoadingIndicator(progress: progress),
             const SizedBox(width: 28),
             
-            // Group name
+            // Group name (takes available space)
             Expanded(
               child: Text(
                 groupName,
@@ -44,12 +46,34 @@ class GroupMessageCard extends StatelessWidget {
               ),
             ),
             
-            // Status count
-            Text(
-              '$receivedCount/$totalCount',
-              style: KikoTypography.withColor(
-                KikoTypography.appFootnote,
-                AppColors.textPrimaryKiko,
+            const SizedBox(width: 8),
+            
+            // Emoji icon (fixed position and width for vertical alignment)
+            if (emoji != null) ...[
+              SizedBox(
+                width: 28,
+                child: Text(
+                  emoji!,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontFamily: 'Nunito',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(width: 12),
+            ],
+            
+            // Status count (fixed width for consistent emoji positioning)
+            SizedBox(
+              width: 40,
+              child: Text(
+                '$receivedCount/$totalCount',
+                style: KikoTypography.withColor(
+                  KikoTypography.appFootnote,
+                  AppColors.textPrimaryKiko,
+                ),
+                textAlign: TextAlign.right,
               ),
             ),
           ],

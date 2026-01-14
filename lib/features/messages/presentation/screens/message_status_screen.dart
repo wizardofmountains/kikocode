@@ -830,6 +830,7 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
                                 children: [
                                   GroupMessageCard(
                                     groupName: message['name'],
+                                    emoji: message['icon'],
                                     receivedCount: message['received'],
                                     totalCount: message['total'],
                                     progress: message['progress'],

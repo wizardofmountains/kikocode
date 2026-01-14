@@ -46,10 +46,6 @@ class _MessageInputState extends State<MessageInput> {
           height: 50,
           decoration: BoxDecoration(
             color: AppColors.surfaceHighest,
-            border: Border.all(
-              color: AppColors.surfaceLow,
-              width: 2,
-            ),
             borderRadius: BorderRadius.circular(25),
           ),
           child: Row(
@@ -66,6 +62,8 @@ class _MessageInputState extends State<MessageInput> {
                         AppColors.captionKiko,
                       ),
                       border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
                     ),
