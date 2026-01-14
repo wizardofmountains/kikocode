@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:kikocode/core/design_system/design_system.dart';
 
 class ActionCard extends StatelessWidget {
   final String title;
@@ -17,26 +17,18 @@ class ActionCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 80,
-        padding: const EdgeInsets.all(16),
+        padding: AppSpacing.all4,
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          color: AppColors.surfaceBright,
+          borderRadius: AppBorders.xl,
+          boxShadow: AppShadows.md,
         ),
         child: Center(
           child: Text(
             title,
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
+            style: AppTypography.bodySmall.copyWith(
+              fontWeight: AppTypography.semiBold,
             ),
           ),
         ),

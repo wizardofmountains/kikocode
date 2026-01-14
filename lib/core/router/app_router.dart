@@ -76,7 +76,10 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: '/home',
           name: 'home',
-          builder: (context, state) => const MainScreen(),
+          builder: (context, state) {
+            final username = state.extra as String? ?? 'User';
+            return MainScreen(username: username);
+          },
         ),
         GoRoute(
           path: '/group-selection',

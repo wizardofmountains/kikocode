@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:coolicons/coolicons.dart';
+import 'package:kikocode/core/design_system/design_system.dart';
 
 class GroupsSection extends StatelessWidget {
   const GroupsSection({super.key});
@@ -9,44 +9,34 @@ class GroupsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: AppSpacing.all5,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.surfaceBright,
+        borderRadius: AppBorders.xl2,
+        boxShadow: AppShadows.md,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Gruppen',
-            style: GoogleFonts.inter(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
+            style: AppTypography.h5,
           ),
-          const SizedBox(height: 16),
+          AppSpacing.v4,
           _buildGroupItem(
             context,
             emoji: '🦋',
             name: 'Schmetterling',
             color: const Color(0xFF7DD3C0),
           ),
-          const SizedBox(height: 12),
+          AppSpacing.v3,
           _buildGroupItem(
             context,
             emoji: '🐞',
             name: 'Marienkäfer',
             color: const Color(0xFFFF9999),
           ),
-          const SizedBox(height: 12),
+          AppSpacing.v3,
           _buildGroupItem(
             context,
             emoji: '🦜',
@@ -65,10 +55,13 @@ class GroupsSection extends StatelessWidget {
     required Color color,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: AppSpacing.symmetric(
+        horizontal: AppSpacing.spacing4,
+        vertical: AppSpacing.spacing3,
+      ),
       decoration: BoxDecoration(
-        color: const Color(0xFFFBF8F2),
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.backgroundLight,
+        borderRadius: AppBorders.xl,
       ),
       child: Row(
         children: [
@@ -77,8 +70,8 @@ class GroupsSection extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
+              color: AppColors.surfaceBright,
+              borderRadius: AppBorders.lg,
             ),
             child: Center(
               child: Text(
@@ -87,24 +80,25 @@ class GroupsSection extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          AppSpacing.h3,
           // Group name
           Expanded(
             child: Text(
               name,
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
+              style: AppTypography.bodyBase.copyWith(
+                fontWeight: AppTypography.medium,
               ),
             ),
           ),
           // Action buttons
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: AppSpacing.symmetric(
+              horizontal: AppSpacing.spacing3,
+              vertical: AppSpacing.spacing2,
+            ),
             decoration: BoxDecoration(
               color: color.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: AppBorders.lg,
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -117,7 +111,7 @@ class GroupsSection extends StatelessWidget {
                     color: color.withOpacity(0.8),
                   ),
                 ),
-                const SizedBox(width: 8),
+                AppSpacing.h2,
                 Icon(
                   Coolicons.calendar,
                   size: 18,
