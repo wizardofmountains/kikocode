@@ -46,7 +46,9 @@ class _MessageComposerFieldState extends State<MessageComposerField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      constraints: const BoxConstraints(
+        minHeight: 50,
+      ),
       decoration: BoxDecoration(
         color: AppColors.surfaceHighest,
         border: Border.all(
@@ -56,33 +58,54 @@ class _MessageComposerFieldState extends State<MessageComposerField> {
         borderRadius: BorderRadius.circular(25),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(left: 23),
-              child: TextField(
-                controller: widget.controller,
-                maxLines: 1,
-                textInputAction: TextInputAction.send,
-                onSubmitted: (_) {
-                  if (_hasText) {
-                    widget.onSend?.call();
-                  }
-                },
-                style: KikoTypography.withColor(
-                  KikoTypography.appBody,
-                  AppColors.textPrimaryKiko,
-                ),
-                decoration: InputDecoration(
-                  hintText: widget.placeholder,
-                  hintStyle: KikoTypography.withColor(
-                    KikoTypography.appBody,
-                    AppColors.captionKiko,
+              padding: const EdgeInsets.only(left: 23, top: 14, bottom: 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_hasText)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Text(
+                        'Meine Nachricht',
+                        style: KikoTypography.withColor(
+                          KikoTypography.appHeadline,
+                          AppColors.textPrimaryKiko,
+                        ),
+                      ),
+                    ),
+                  TextField(
+                    controller: widget.controller,
+                    maxLines: null,
+                    minLines: 1,
+                    textInputAction: TextInputAction.newline,
+                    onSubmitted: (_) {
+                      if (_hasText) {
+                        widget.onSend?.call();
+                      }
+                    },
+                    style: KikoTypography.withColor(
+                      KikoTypography.appBody,
+                      AppColors.textPrimaryKiko,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: widget.placeholder,
+                      hintStyle: KikoTypography.withColor(
+                        KikoTypography.appBody,
+                        AppColors.captionKiko,
+                      ),
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                    ),
                   ),
-                  border: InputBorder.none,
-                  isDense: true,
-                  contentPadding: EdgeInsets.zero,
-                ),
+                ],
               ),
             ),
           ),

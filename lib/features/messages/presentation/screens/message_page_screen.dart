@@ -3,10 +3,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:coolicons/coolicons.dart';
 import '../../../../core/design_system/colors.dart';
-import '../../../../core/design_system/spacing.dart';
 import '../../../../core/design_system/kiko_typography.dart';
-import '../widgets/selection_field.dart';
 import '../widgets/message_composer_field.dart';
+import '../widgets/group_selection_field.dart';
+import '../widgets/subject_input_field.dart';
+import '../../domain/models/group.dart';
 
 /// Screen for composing a new message
 /// Features: Group selection, Subject selection, Message text area
@@ -18,41 +19,49 @@ class MessagePageScreen extends StatefulWidget {
 }
 
 class _MessagePageScreenState extends State<MessagePageScreen> {
-  String? _selectedGroup;
-  String? _selectedSubject;
+  List<Group> _selectedGroups = [];
+  final TextEditingController _subjectController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
 
-  final List<String> _groups = [
-    'Sonnenscheingruppe',
-    'Regenbogengruppe',
-    'Sternengruppe',
-    'Mondgruppe',
-    'Wolkengruppe',
-  ];
-
-  final List<String> _subjects = [
-    'Wichtig',
-    'Dringend',
-    'Information',
-    'Erinnerung',
-    'Allgemein',
+  final List<Group> _groups = [
+    const Group(
+      id: '1',
+      name: 'Schmetterling',
+      emoji: '🦋',
+      iconColor: AppColors.secondaryKiko,
+    ),
+    const Group(
+      id: '2',
+      name: 'Marienkäfer',
+      emoji: '🐞',
+      iconColor: AppColors.secondaryKiko,
+    ),
+    const Group(
+      id: '3',
+      name: 'Papagei',
+      emoji: '🦜',
+      iconColor: AppColors.secondaryKiko,
+    ),
   ];
 
   @override
   void dispose() {
+    _subjectController.dispose();
     _messageController.dispose();
     super.dispose();
   }
 
   void _sendMessage() {
-    if (_selectedGroup != null &&
-        _selectedSubject != null &&
+    if (_selectedGroups.isNotEmpty &&
+        _subjectController.text.trim().isNotEmpty &&
         _messageController.text.trim().isNotEmpty) {
       // TODO: Implement actual message sending
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Nachricht gesendet!'),
-          duration: Duration(seconds: 2),
+        SnackBar(
+          content: Text(
+            'Nachricht an ${_selectedGroups.length} Gruppe(n) gesendet!',
+          ),
+          duration: const Duration(seconds: 2),
         ),
       );
       
@@ -195,29 +204,22 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                     const SizedBox(height: 18),
                     
                     // Group Selection
-                    SelectionField(
-                      label: 'Gruppe/n',
-                      value: _selectedGroup,
-                      items: _groups,
-                      onChanged: (value) {
+                    GroupSelectionField(
+                      groups: _groups,
+                      selectedGroups: _selectedGroups,
+                      onChanged: (groups) {
                         setState(() {
-                          _selectedGroup = value;
+                          _selectedGroups = groups;
                         });
                       },
                       onInfoTap: _showGroupInfo,
                     ),
                     const SizedBox(height: 9),
                     
-                    // Subject Selection
-                    SelectionField(
-                      label: 'Betreff',
-                      value: _selectedSubject,
-                      items: _subjects,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedSubject = value;
-                        });
-                      },
+                    // Subject Input
+                    SubjectInputField(
+                      controller: _subjectController,
+                      placeholder: 'Betreff',
                       onInfoTap: _showSubjectInfo,
                     ),
                     const SizedBox(height: 9),

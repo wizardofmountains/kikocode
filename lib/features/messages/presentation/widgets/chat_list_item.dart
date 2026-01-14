@@ -24,26 +24,30 @@ class ChatListItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          // Avatar with emoji
+          // Avatar with emoji in corporate design (Figma 560:2702)
           Container(
-            width: 45,
-            height: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: AppColors.surfaceLow,
-                width: 2,
-              ),
+            width: 54,
+            height: 54,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.secondaryKiko,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 2),
-                Text(
+            padding: const EdgeInsets.all(2),
+            child: Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.secondaryLightKiko,
+              ),
+              child: Center(
+                child: Text(
                   emoji,
-                  style: const TextStyle(fontSize: 28),
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontFamily: 'Nunito',
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ],
+              ),
             ),
           ),
           const SizedBox(width: 13),
