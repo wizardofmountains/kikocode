@@ -5,12 +5,14 @@ import '../../../../core/design_system/kiko_typography.dart';
 /// Text area for composing messages with send button
 class MessageComposerField extends StatefulWidget {
   final TextEditingController controller;
+  final FocusNode? focusNode;
   final VoidCallback? onSend;
   final String placeholder;
 
   const MessageComposerField({
     super.key,
     required this.controller,
+    this.focusNode,
     this.onSend,
     this.placeholder = 'Meine Nachricht ...',
   });
@@ -45,19 +47,26 @@ class _MessageComposerFieldState extends State<MessageComposerField> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(
-        minHeight: 50,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceHighest,
-        border: Border.all(
-          color: AppColors.surfaceLow,
-          width: 2,
+    return GestureDetector(
+      onTap: () {
+        // Ensure keyboard opens on tap
+        if (widget.focusNode != null) {
+          widget.focusNode!.requestFocus();
+        }
+      },
+      child: Container(
+        constraints: const BoxConstraints(
+          minHeight: 50,
         ),
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Row(
+        decoration: BoxDecoration(
+          color: AppColors.surfaceHighest,
+          border: Border.all(
+            color: AppColors.surfaceLow,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
@@ -80,6 +89,7 @@ class _MessageComposerFieldState extends State<MessageComposerField> {
                     ),
                   TextField(
                     controller: widget.controller,
+                    focusNode: widget.focusNode,
                     maxLines: null,
                     minLines: 1,
                     textInputAction: TextInputAction.newline,
@@ -131,6 +141,7 @@ class _MessageComposerFieldState extends State<MessageComposerField> {
             ),
           ),
         ],
+        ),
       ),
     );
   }

@@ -22,6 +22,10 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
   List<Group> _selectedGroups = [];
   final TextEditingController _subjectController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
+  
+  // FocusNodes for keyboard control
+  final FocusNode _subjectFocusNode = FocusNode();
+  final FocusNode _messageFocusNode = FocusNode();
 
   final List<Group> _groups = [
     const Group(
@@ -48,6 +52,8 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
   void dispose() {
     _subjectController.dispose();
     _messageController.dispose();
+    _subjectFocusNode.dispose();
+    _messageFocusNode.dispose();
     super.dispose();
   }
 
@@ -114,7 +120,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
           style: KikoTypography.appHeadline,
         ),
         content: Text(
-          'Wähle einen Betreff für deine Nachricht aus.',
+          'Gib einen Betreff für deine Nachricht ein.',
           style: KikoTypography.appBody,
         ),
         actions: [
@@ -219,6 +225,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                     // Subject Input
                     SubjectInputField(
                       controller: _subjectController,
+                      focusNode: _subjectFocusNode,
                       placeholder: 'Betreff',
                       onInfoTap: _showSubjectInfo,
                     ),
@@ -227,6 +234,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                     // Message Composer
                     MessageComposerField(
                       controller: _messageController,
+                      focusNode: _messageFocusNode,
                       onSend: _sendMessage,
                       placeholder: 'Meine Nachricht ...',
                     ),

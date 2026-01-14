@@ -7,35 +7,45 @@ import '../../../../core/design_system/kiko_typography.dart';
 /// Single-line text input field for subject entry
 class SubjectInputField extends StatelessWidget {
   final TextEditingController controller;
+  final FocusNode? focusNode;
   final String placeholder;
   final VoidCallback? onInfoTap;
 
   const SubjectInputField({
     super.key,
     required this.controller,
+    this.focusNode,
     this.placeholder = 'Betreff',
     this.onInfoTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        color: AppColors.surfaceHighest,
-        border: Border.all(
-          color: AppColors.surfaceLow,
-          width: 2,
+    return GestureDetector(
+      onTap: () {
+        // Ensure keyboard opens on tap
+        if (focusNode != null) {
+          focusNode!.requestFocus();
+        }
+      },
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+          color: AppColors.surfaceHighest,
+          border: Border.all(
+            color: AppColors.surfaceLow,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXxl),
         ),
-        borderRadius: BorderRadius.circular(AppSpacing.radiusXxl),
-      ),
-      child: Row(
+        child: Row(
         children: [
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 24, right: 8),
               child: TextField(
                 controller: controller,
+                focusNode: focusNode,
                 maxLines: 1,
                 textInputAction: TextInputAction.next,
                 style: KikoTypography.withColor(
@@ -75,6 +85,7 @@ class SubjectInputField extends StatelessWidget {
               ),
             ),
         ],
+        ),
       ),
     );
   }

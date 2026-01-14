@@ -24,7 +24,7 @@ class ChatListItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          // Avatar with emoji in corporate design (Figma 560:2702)
+          // Avatar with emoji (unified style with GroupSelectionField)
           Container(
             width: 54,
             height: 54,
@@ -32,20 +32,13 @@ class ChatListItem extends StatelessWidget {
               shape: BoxShape.circle,
               color: AppColors.secondaryKiko,
             ),
-            padding: const EdgeInsets.all(2),
-            child: Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.secondaryLightKiko,
-              ),
-              child: Center(
-                child: Text(
-                  emoji,
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontFamily: 'Nunito',
-                    fontWeight: FontWeight.bold,
-                  ),
+            child: Center(
+              child: Text(
+                emoji,
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontFamily: 'Nunito',
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
