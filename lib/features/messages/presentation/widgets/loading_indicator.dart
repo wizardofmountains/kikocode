@@ -38,9 +38,9 @@ class _LoadingIndicatorPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
 
-    // Background circle (gray)
+    // Background circle (surface base)
     final backgroundPaint = Paint()
-      ..color = AppColors.gray200
+      ..color = AppColors.surfaceBase
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3.0
       ..strokeCap = StrokeCap.round;

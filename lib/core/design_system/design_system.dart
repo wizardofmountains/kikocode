@@ -51,9 +51,11 @@ library design_system;
 // Export all design system modules
 export 'colors.dart';
 export 'typography.dart';
+export 'kiko_typography.dart';
 export 'spacing.dart';
 export 'borders.dart';
 export 'shadows.dart';
 export 'breakpoints.dart';
 export 'theme.dart';
+export 'kiko_components.dart';
 

@@ -2,7 +2,24 @@
 
 ## Overview
 
-This project now includes a comprehensive Tailwind-inspired design system that provides consistent design tokens and utilities for building beautiful, maintainable UIs in Flutter.
+This project includes a Figma-based Kiko design system for iOS-focused Flutter UIs, plus the legacy Tailwind-inspired system.
+
+## Kiko Design System (Figma)
+
+### What’s Included
+- **Colors**: `AppColors.*Kiko` tokens (primary, secondary, surfaces, text)
+- **Typography**: `KikoTypography` (Nunito / Nunito Sans)
+- **Components**: `KikoPrimaryButton`, `KikoSecondaryButton`, `KikoTextField`, `KikoSearchField`, `KikoTabIcon`, `KikoShortcutButton`, `KikoLoadingIndicator`
+- **Theme**: `AppTheme.lightTheme` aligned to the Figma palette
+
+### Quick Usage
+```dart
+import 'package:kikocode/core/design_system/design_system.dart';
+
+KikoPrimaryButton(label: 'Standard', onPressed: () {});
+KikoTextField(hintText: 'Ich bin ein Textfeld.');
+KikoSearchField(hintText: 'Ich bin eine Suchanfrage.', isActive: true);
+```
 
 ## What's Included
 

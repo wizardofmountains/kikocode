@@ -294,6 +294,8 @@ class AppColors {
   static const Color secondaryLightKiko = Color(0xFFD4F7EB);
   static const Color textPrimaryKiko = Color(0xFF242424);
   static const Color captionKiko = Color(0xFFBFBFBF);
+  static const Color textMutedKiko = Color(0xFFB2AEAE);
+  static const Color labelTertiaryKiko = Color(0x4C3C3C43);
   static const Color successGreen = Color(0xFF34C759);
 
   // ============= Special =============
