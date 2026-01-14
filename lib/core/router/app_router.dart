@@ -34,6 +34,7 @@ final GoRouter appRouter = GoRouter(
           name: 'welcome',
           builder: (context, state) => const WelcomeScreen(),
         ),
+        // Authentication routes
         GoRoute(
           path: '/auth/login',
           name: 'login',
@@ -55,6 +56,23 @@ final GoRouter appRouter = GoRouter(
             return LoadingScreen(username: username);
           },
         ),
+        GoRoute(
+          path: '/auth/biometric',
+          name: 'biometric-auth',
+          builder: (context, state) => const BiometricAuthScreen(),
+        ),
+        GoRoute(
+          path: '/auth/success',
+          name: 'auth-success',
+          builder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>?;
+            return AuthSuccessScreen(
+              username: extra?['username'] as String?,
+              showFaceId: extra?['showFaceId'] as bool? ?? false,
+            );
+          },
+        ),
+        // Main app routes
         GoRoute(
           path: '/home',
           name: 'home',
@@ -107,4 +125,3 @@ final GoRouter appRouter = GoRouter(
     ),
   ),
 );
-

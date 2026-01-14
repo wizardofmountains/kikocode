@@ -37,18 +37,7 @@ class StartupRepository {
 
   /// Initialize Supabase configuration
   Future<void> _initializeSupabase() async {
-    try {
-      // Check if Supabase is already initialized
-      if (Supabase.instance.client.auth.currentSession != null ||
-          Supabase.instance.client.auth.currentUser != null) {
-        // Already initialized
-        return;
-      }
-    } catch (e) {
-      // Not initialized yet, proceed with initialization
-    }
-
-    // Initialize Supabase
+    // Initialize Supabase (method is idempotent)
     await SupabaseConfig.initialize();
   }
 }

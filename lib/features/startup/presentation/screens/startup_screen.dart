@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:kikocode/core/constants/asset_paths.dart';
 import 'package:kikocode/core/design_system/design_system.dart';
 import 'package:kikocode/features/startup/presentation/providers/startup_providers.dart';
+import 'package:kikocode/features/auth/providers/auth_providers.dart';
 
 /// Startup screen that initializes the app and checks authentication status
 /// 
@@ -13,12 +14,21 @@ import 'package:kikocode/features/startup/presentation/providers/startup_provide
 /// - Shows the colorful tagline "Kommunikation kinderleicht!"
 /// - Shows a subtle loading indicator while initializing
 /// - Checks authentication status via Supabase
+/// - Checks biometric preference for returning users
 /// - Routes to appropriate screen:
-///   - Authenticated → /home
+///   - Authenticated + Biometric enabled → /auth/biometric
+///   - Authenticated + Biometric disabled → /auth/success
 ///   - Not authenticated → /welcome
 ///   - Error → /welcome (fail-safe)
-class StartupScreen extends ConsumerWidget {
+class StartupScreen extends ConsumerStatefulWidget {
   const StartupScreen({super.key});
+
+  @override
+  ConsumerState<StartupScreen> createState() => _StartupScreenState();
+}
+
+class _StartupScreenState extends ConsumerState<StartupScreen> {
+  bool _hasNavigated = false;
 
   /// Builds the colorful tagline "Kommunikation kinderleicht!"
   /// with specific letters colored to match the KIKO brand
@@ -52,8 +62,40 @@ class StartupScreen extends ConsumerWidget {
     );
   }
 
+  Future<void> _handleNavigation(dynamic user) async {
+    if (_hasNavigated || !mounted) return;
+    _hasNavigated = true;
+
+    if (user != null) {
+      // User is authenticated - check biometric preference
+      final biometricService = ref.read(biometricServiceProvider);
+      final isBiometricEnabled = await biometricService.isBiometricEnabled();
+      final isBiometricAvailable = await biometricService.isBiometricAvailable();
+
+      if (!mounted) return;
+
+      if (isBiometricEnabled && isBiometricAvailable) {
+        // User has biometric enabled → go to biometric auth screen
+        context.go('/auth/biometric');
+      } else {
+        // User is authenticated but biometric not enabled → go to success screen
+        // Fetch profile for username
+        final profile = await ref.read(profileRepositoryProvider).getCurrentProfile();
+        if (!mounted) return;
+        
+        context.go('/auth/success', extra: {
+          'username': profile?.name,
+          'showFaceId': false,
+        });
+      }
+    } else {
+      // User is not authenticated → go to welcome
+      context.go('/');
+    }
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final startupState = ref.watch(appStartupProvider);
 
     // Handle navigation based on startup state
@@ -61,21 +103,14 @@ class StartupScreen extends ConsumerWidget {
       data: (user) {
         // Use addPostFrameCallback to avoid navigation during build
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!context.mounted) return;
-          
-          if (user != null) {
-            // User is authenticated → go to home
-            context.go('/home');
-          } else {
-            // User is not authenticated → go to welcome
-            context.go('/');
-          }
+          _handleNavigation(user);
         });
       },
       error: (error, stack) {
         // Error during initialization → fail-safe to welcome screen
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!context.mounted) return;
+          if (!mounted || _hasNavigated) return;
+          _hasNavigated = true;
           context.go('/');
         });
       },
@@ -107,7 +142,7 @@ class StartupScreen extends ConsumerWidget {
                 width: 32,
                 height: 32,
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary.withOpacity(0.6)),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary.withValues(alpha: 0.6)),
                   strokeWidth: 2.5,
                 ),
               ),

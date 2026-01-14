@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kikocode/core/components/atoms/app_button.dart';
+import 'package:kikocode/core/components/atoms/app_input.dart';
 import 'package:kikocode/core/constants/asset_paths.dart';
 import 'package:kikocode/core/design_system/design_system.dart';
 
@@ -21,15 +23,46 @@ class VerificationScreen extends StatefulWidget {
 }
 
 class _VerificationScreenState extends State<VerificationScreen> {
+  late final TextEditingController _usernameController;
+  final _passwordController = TextEditingController();
+  
+  // Validation state
+  String? _passwordError;
+  
   @override
   void initState() {
     super.initState();
-    // Simulate Face ID authentication after 2 seconds
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        context.pushReplacement('/auth/loading', extra: widget.username);
-      }
+    // Pre-fill username from route parameter
+    _usernameController = TextEditingController(text: widget.username);
+  }
+  
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+  
+  void _handleVerification() {
+    // Reset errors
+    setState(() {
+      _passwordError = null;
     });
+
+    // Validate fields
+    bool hasError = false;
+    
+    if (_passwordController.text.isEmpty) {
+      setState(() {
+        _passwordError = 'Passwort erforderlich!';
+      });
+      hasError = true;
+    }
+
+    // If no errors, proceed
+    if (!hasError) {
+      context.pushReplacement('/auth/loading', extra: widget.username);
+    }
   }
 
   @override
@@ -69,79 +102,32 @@ class _VerificationScreenState extends State<VerificationScreen> {
               ),
             ),
             
-            // Username label - top 325px, left 42px
+            // Username field (read-only, prefilled) - top 325px, left 22px
             Positioned(
               top: 325,
-              left: 42,
-              child: Text(
-                'Benutzername',
-                style: AppTypography.caption2.copyWith(
-                  color: AppColors.textTertiary,
-                ),
-              ),
-            ),
-            
-            // Username field (filled, focused) - top 342px, left 22px
-            Positioned(
-              top: 342,
               left: 22,
-              child: Container(
-                width: 350,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceHighest,
-                  border: Border.all(
-                    color: AppColors.secondary, // Green border for focused state
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  widget.username,
-                  style: AppTypography.body.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
-                ),
+              right: 22,
+              child: AppInput(
+                controller: _usernameController,
+                label: 'Benutzername',
+                hintText: 'Benutzername',
+                readOnly: true,
+                size: AppInputSize.medium,
               ),
             ),
             
-            // Password label - top 398px, left 42px
+            // Password field - top 398px, left 22px
             Positioned(
               top: 398,
-              left: 42,
-              child: Text(
-                'Passwort',
-                style: AppTypography.caption2.copyWith(
-                  color: AppColors.textTertiary,
-                ),
-              ),
-            ),
-            
-            // Password field (filled, focused) - top 415px, left 22px
-            Positioned(
-              top: 415,
               left: 22,
-              child: Container(
-                width: 350,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceHighest,
-                  border: Border.all(
-                    color: AppColors.secondary, // Green border for focused state
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  '••••••••',
-                  style: AppTypography.body.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
-                ),
+              right: 22,
+              child: AppInput(
+                controller: _passwordController,
+                label: 'Passwort',
+                hintText: 'Passwort',
+                obscureText: true,
+                errorText: _passwordError,
+                size: AppInputSize.medium,
               ),
             ),
             
@@ -165,31 +151,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
               left: 0,
               right: 0,
               child: Center(
-                child: Container(
+                child: SizedBox(
                   width: 120,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(13),
-                    border: Border.all(
-                      color: AppColors.primaryLight,
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primaryLight,
-                        blurRadius: 8,
-                        spreadRadius: 2,
-                        offset: const Offset(2, 2),
-                      ),
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Anmelden',
-                    style: AppTypography.headline.copyWith(
-                      color: AppColors.surfaceHigh,
-                    ),
+                  child: AppButton(
+                    label: 'Anmelden',
+                    onPressed: _handleVerification,
+                    variant: AppButtonVariant.primary,
+                    size: AppButtonSize.medium,
                   ),
                 ),
               ),
