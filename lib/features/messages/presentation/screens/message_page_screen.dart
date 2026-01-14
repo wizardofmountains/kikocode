@@ -8,6 +8,7 @@ import '../widgets/message_composer_field.dart';
 import '../widgets/group_selection_field.dart';
 import '../widgets/subject_input_field.dart';
 import '../../domain/models/group.dart';
+import '../../../home/presentation/widgets/bottom_nav_bar.dart';
 
 /// Screen for composing a new message
 /// Features: Group selection, Subject selection, Message text area
@@ -376,6 +377,10 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: 3, // Nachrichten-Tab ist aktiv
+        messageBadgeCount: 6, // Badge für ungelesene Nachrichten
       ),
     );
   }

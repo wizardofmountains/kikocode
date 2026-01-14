@@ -8,6 +8,7 @@ import '../widgets/group_message_card.dart';
 import '../widgets/chat_list_item.dart';
 import '../widgets/custom_tab_bar.dart';
 import '../widgets/message_fab.dart';
+import '../../../home/presentation/widgets/bottom_nav_bar.dart';
 
 /// Main messages overview screen with group messages and chats
 /// Features: Custom header, group message status, individual chats, integrated tab bar
@@ -1178,8 +1179,8 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
                           ),
                         ),
 
-                        // Bottom padding for tab bar
-                        const SizedBox(height: 140),
+                        // Bottom padding for navigation bar
+                        const SizedBox(height: 90),
                       ],
                     ),
                   ),
@@ -1187,19 +1188,11 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
               ),
             ),
           ),
-
-          // Tab Bar positioned at bottom
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: CustomTabBar(
-              selectedIndex: _selectedTabIndex,
-              onTap: _onTabTap,
-              badgeCount: 6,
-            ),
-          ),
         ],
+      ),
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: 3, // Nachrichten-Tab ist aktiv
+        messageBadgeCount: 6, // Badge für ungelesene Nachrichten
       ),
     );
   }
