@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kikocode/core/design_system/design_system.dart';
 import 'package:go_router/go_router.dart';
 import 'package:coolicons/coolicons.dart';
 
@@ -15,14 +16,8 @@ class BottomNavBar extends StatelessWidget {
     return Container(
       height: 70,
       decoration: BoxDecoration(
-        color: const Color(0xFFE9D5FF), // Light purple/lavender
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
+        color: AppColors.primary200,
+        boxShadow: AppShadows.lg,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -35,12 +30,12 @@ class BottomNavBar extends StatelessWidget {
           _buildNavItem(
             icon: Coolicons.calendar,
             isActive: currentIndex == 1,
-            onTap: () {}, // TODO: Calendar screen
+            onTap: () {},
           ),
           _buildNavItem(
             icon: Coolicons.user,
             isActive: currentIndex == 2,
-            onTap: () {}, // TODO: Family/People screen
+            onTap: () {},
           ),
           _buildNavItem(
             icon: Coolicons.message_circle,
@@ -50,7 +45,7 @@ class BottomNavBar extends StatelessWidget {
           _buildNavItem(
             icon: Coolicons.settings,
             isActive: currentIndex == 4,
-            onTap: () {}, // TODO: Settings screen
+            onTap: () {},
           ),
         ],
       ),
@@ -68,12 +63,12 @@ class BottomNavBar extends StatelessWidget {
         width: 56,
         height: 56,
         decoration: BoxDecoration(
-          color: isActive ? const Color(0xFFB794F6) : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          color: isActive ? AppColors.purple400 : Colors.transparent,
+          borderRadius: AppBorders.xl,
         ),
         child: Icon(
           icon,
-          color: isActive ? Colors.white : const Color(0xFF9333EA),
+          color: isActive ? AppColors.white : AppColors.purple600,
           size: 28,
         ),
       ),
