@@ -139,6 +139,130 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
     );
   }
 
+  bool _hasUnsavedChanges() {
+    return _selectedGroups.isNotEmpty ||
+        _subjectController.text.trim().isNotEmpty ||
+        _messageController.text.trim().isNotEmpty;
+  }
+
+  void _handleBackPress() {
+    if (_hasUnsavedChanges()) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            backgroundColor: AppColors.surfaceHighest,
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Warning Icon
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryKiko.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Coolicons.warning,
+                      color: AppColors.primaryKiko,
+                      size: 32,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // Title
+                  Text(
+                    'Entwurf verwerfen?',
+                    style: KikoTypography.withColor(
+                      KikoTypography.appHeadline,
+                      AppColors.textPrimaryKiko,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  
+                  // Description
+                  Text(
+                    'Deine ungespeicherten Änderungen gehen verloren, wenn du fortfährst.',
+                    style: KikoTypography.withColor(
+                      KikoTypography.appBody,
+                      AppColors.captionKiko,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  // Buttons
+                  Row(
+                    children: [
+                      // Cancel Button
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            side: const BorderSide(
+                              color: AppColors.primaryKiko,
+                              width: 1.5,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            'Abbrechen',
+                            style: KikoTypography.withColor(
+                              KikoTypography.appBody,
+                              AppColors.primaryKiko,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      
+                      // Discard Button
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close dialog
+                            context.pop(); // Go back
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            backgroundColor: AppColors.primaryKiko,
+                            foregroundColor: AppColors.surfaceHighest,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            'Verwerfen',
+                            style: KikoTypography.withColor(
+                              KikoTypography.appBody,
+                              AppColors.surfaceHighest,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      context.pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,7 +286,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                       color: AppColors.textPrimaryKiko,
                       size: 28,
                     ),
-                    onPressed: () => context.pop(),
+                    onPressed: _handleBackPress,
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                   ),
