@@ -82,6 +82,8 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
   }
 
   void _showPhoneDialog(String name) {
+    final parentInfo = _getParentInfo(name);
+    
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -105,14 +107,14 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  name,
+                  'Kind: $name',
                   style: KikoTypography.withColor(
-                    KikoTypography.appBody,
-                    AppColors.textPrimaryKiko,
+                    KikoTypography.appFootnote,
+                    AppColors.captionKiko,
                   ),
                 ),
                 const SizedBox(height: 24),
-                // Phone number
+                // Mother's phone number (Primary contact)
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -127,7 +129,6 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(
                         Icons.phone,
@@ -135,11 +136,90 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
                         size: 20,
                       ),
                       const SizedBox(width: 12),
-                      Text(
-                        '+43 664 123 4567',
-                        style: KikoTypography.withColor(
-                          KikoTypography.appBody,
-                          AppColors.textPrimaryKiko,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              parentInfo['mother']!,
+                              style: KikoTypography.withColor(
+                                KikoTypography.appBody,
+                                AppColors.textPrimaryKiko,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Mutter • Hauptkontakt',
+                              style: KikoTypography.withColor(
+                                KikoTypography.appCaption1,
+                                AppColors.captionKiko,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              parentInfo['motherPhone']!,
+                              style: KikoTypography.withColor(
+                                KikoTypography.appFootnote,
+                                AppColors.textPrimaryKiko,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Father's phone number (Secondary contact)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceHigh,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: AppColors.surfaceLow,
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.phone,
+                        color: AppColors.textPrimaryKiko,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              parentInfo['father']!,
+                              style: KikoTypography.withColor(
+                                KikoTypography.appBody,
+                                AppColors.textPrimaryKiko,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Vater • Zweitkontakt',
+                              style: KikoTypography.withColor(
+                                KikoTypography.appCaption1,
+                                AppColors.captionKiko,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              parentInfo['fatherPhone']!,
+                              style: KikoTypography.withColor(
+                                KikoTypography.appFootnote,
+                                AppColors.textPrimaryKiko,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
