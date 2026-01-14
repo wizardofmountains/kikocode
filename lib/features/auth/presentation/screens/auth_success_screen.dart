@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:kikocode/core/constants/asset_paths.dart';
+import 'package:kikocode/core/design_system/design_system.dart';
 import 'package:kikocode/features/auth/presentation/widgets/face_id_indicator.dart';
 import 'package:kikocode/features/auth/providers/auth_providers.dart';
 
@@ -157,14 +158,18 @@ class _AuthSuccessScreenState extends ConsumerState<AuthSuccessScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF3E7CE), // Beige from Figma
-      body: SafeArea(
-        child: Column(
+      backgroundColor: AppColors.surfaceBase,
+      body: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: Stack(
           children: [
             // Face ID indicator at the top
             if (widget.showFaceId)
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
+              Positioned(
+                top: 10,
+                left: 0,
+                right: 0,
                 child: FaceIdIndicator(
                   state: _faceIdComplete 
                       ? FaceIdState.success 
@@ -179,47 +184,53 @@ class _AuthSuccessScreenState extends ConsumerState<AuthSuccessScreen>
                 ),
               ),
             
-            const Spacer(flex: 1),
-            
-            // KIKO Logo
-            AnimatedBuilder(
-              animation: _logoController,
-              builder: (context, child) {
-                return Opacity(
-                  opacity: _logoFadeAnimation.value,
-                  child: Transform.scale(
-                    scale: _logoScaleAnimation.value,
-                    child: child,
+            // KIKO Logo - top 175px (matching loading screen pattern)
+            Positioned(
+              top: 175,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: AnimatedBuilder(
+                  animation: _logoController,
+                  builder: (context, child) {
+                    return Opacity(
+                      opacity: _logoFadeAnimation.value,
+                      child: Transform.scale(
+                        scale: _logoScaleAnimation.value,
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: SvgPicture.asset(
+                    AssetPaths.logoLight,
+                    width: 299.522,
+                    height: 120,
                   ),
-                );
-              },
-              child: SvgPicture.asset(
-                'assets/images/LogoLight.svg',
-                width: 300,
-                height: 120,
-              ),
-            ),
-            
-            const SizedBox(height: 80),
-            
-            // Greeting text
-            SlideTransition(
-              position: _greetingSlideAnimation,
-              child: FadeTransition(
-                opacity: _greetingFadeAnimation,
-                child: Text(
-                  'Hallo ${_displayName ?? 'User'}!',
-                  style: GoogleFonts.nunito(
-                    fontSize: 34,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF242424),
-                  ),
-                  textAlign: TextAlign.center,
                 ),
               ),
             ),
             
-            const Spacer(flex: 2),
+            // Greeting text - top 392px (matching loading screen pattern)
+            Positioned(
+              top: 392,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: SlideTransition(
+                  position: _greetingSlideAnimation,
+                  child: FadeTransition(
+                    opacity: _greetingFadeAnimation,
+                    child: Text(
+                      'Hallo ${_displayName ?? 'User'}!',
+                      style: AppTypography.largeTitle.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
