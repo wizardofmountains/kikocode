@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kikocode/core/design_system/design_system.dart';
+import 'package:kikocode/core/components/components.dart';
 
+/// Action card widget for the home screen
+/// 
+/// Wraps AppActionCard for feature-specific usage.
 class ActionCard extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
@@ -13,26 +16,9 @@ class ActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return AppActionCard(
+      title: title,
       onTap: onTap,
-      child: Container(
-        height: 80,
-        padding: AppSpacing.all4,
-        decoration: BoxDecoration(
-          color: AppColors.surfaceBright,
-          borderRadius: AppBorders.xl,
-          boxShadow: AppShadows.md,
-        ),
-        child: Center(
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: AppTypography.bodySmall.copyWith(
-              fontWeight: AppTypography.semiBold,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

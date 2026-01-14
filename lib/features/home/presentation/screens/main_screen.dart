@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kikocode/core/constants/asset_paths.dart';
 import 'package:kikocode/core/design_system/design_system.dart';
-import '../widgets/news_card.dart';
+import 'package:kikocode/core/components/molecules/molecules.dart';
 import '../widgets/groups_section.dart';
 import '../widgets/action_card.dart';
 import '../widgets/bottom_nav_bar.dart';
@@ -41,8 +41,25 @@ class MainScreen extends StatelessWidget {
                     ),
                     AppSpacing.v5,
                     
-                    // News section
-                    const NewsCard(),
+                    // Events section
+                    AppEventsCard(
+                      title: 'Meine Ereignisse',
+                      events: [
+                        AppEventItem(
+                          dateLabel: 'Heute',
+                          eventName: 'Laternenwanderung',
+                          isActive: true,
+                        ),
+                        AppEventItem(
+                          dateLabel: 'Mi, 10.',
+                          eventName: 'Gemüsebuffet',
+                        ),
+                        AppEventItem(
+                          dateLabel: 'Do, 11.',
+                          eventName: 'Pyjamaparty',
+                        ),
+                      ],
+                    ),
                     AppSpacing.v5,
                     
                     // Groups section
