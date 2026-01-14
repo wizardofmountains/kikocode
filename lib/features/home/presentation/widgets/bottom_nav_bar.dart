@@ -27,14 +27,14 @@ class BottomNavBar extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
+            blurRadius: 7,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
       padding: EdgeInsets.only(
         top: 12,
-        bottom: bottomPadding,
+        bottom: bottomPadding > 0 ? bottomPadding - 12 : 8,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -129,7 +129,7 @@ class BottomNavBar extends StatelessWidget {
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -190,7 +190,7 @@ class BottomNavBar extends StatelessWidget {
                     ),
                 ],
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 1),
               Text(
                 label,
                 style: KikoTypography.withColor(
