@@ -7,11 +7,13 @@ import '../../../../core/design_system/kiko_typography.dart';
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
   final int? messageBadgeCount;
+  final Future<bool> Function()? onNavigationAttempt;
   
   const BottomNavBar({
     super.key,
     required this.currentIndex,
     this.messageBadgeCount,
+    this.onNavigationAttempt,
   });
 
   @override
@@ -30,7 +32,10 @@ class BottomNavBar extends StatelessWidget {
           ),
         ],
       ),
-      padding: EdgeInsets.only(bottom: bottomPadding),
+      padding: EdgeInsets.only(
+        top: 12,
+        bottom: bottomPadding,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -39,14 +44,28 @@ class BottomNavBar extends StatelessWidget {
             iconSize: 32,
             label: 'Home',
             isActive: currentIndex == 0,
-            onTap: () => context.go('/home'),
+            onTap: () async {
+              if (onNavigationAttempt != null) {
+                final canNavigate = await onNavigationAttempt!();
+                if (!canNavigate) return;
+              }
+              if (context.mounted) {
+                context.go('/home');
+              }
+            },
           ),
           _buildNavItem(
             iconPath: 'assets/images/icons/nav_calendar.svg',
             iconSize: 32,
             label: 'Kalender',
             isActive: currentIndex == 1,
-            onTap: () {}, // TODO: Calendar screen
+            onTap: () async {
+              if (onNavigationAttempt != null) {
+                final canNavigate = await onNavigationAttempt!();
+                if (!canNavigate) return;
+              }
+              // TODO: Calendar screen
+            },
           ),
           _buildNavItem(
             iconPath: 'assets/images/icons/nav_team.svg',
@@ -54,7 +73,13 @@ class BottomNavBar extends StatelessWidget {
             label: 'Team',
             isActive: currentIndex == 2,
             badgeCount: messageBadgeCount,
-            onTap: () {}, // TODO: Team screen
+            onTap: () async {
+              if (onNavigationAttempt != null) {
+                final canNavigate = await onNavigationAttempt!();
+                if (!canNavigate) return;
+              }
+              // TODO: Team screen
+            },
           ),
           _buildNavItem(
             iconPath: 'assets/images/icons/nav_messages_inactive.svg',
@@ -62,14 +87,28 @@ class BottomNavBar extends StatelessWidget {
             iconSize: 32,
             label: 'Nachrichten',
             isActive: currentIndex == 3,
-            onTap: () => context.go('/message-overview'),
+            onTap: () async {
+              if (onNavigationAttempt != null) {
+                final canNavigate = await onNavigationAttempt!();
+                if (!canNavigate) return;
+              }
+              if (context.mounted) {
+                context.go('/message-overview');
+              }
+            },
           ),
           _buildNavItem(
             iconPath: 'assets/images/icons/nav_settings.svg',
             iconSize: 32,
             label: 'Einstellungen',
             isActive: currentIndex == 4,
-            onTap: () {}, // TODO: Settings screen
+            onTap: () async {
+              if (onNavigationAttempt != null) {
+                final canNavigate = await onNavigationAttempt!();
+                if (!canNavigate) return;
+              }
+              // TODO: Settings screen
+            },
           ),
         ],
       ),
