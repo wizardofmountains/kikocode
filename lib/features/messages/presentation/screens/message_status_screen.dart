@@ -78,7 +78,7 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
   }
 
   void _onFabPressed() {
-    context.go('/message-compose');
+    context.push('/message-compose');
   }
 
   void _showPhoneDialog(String name) {
