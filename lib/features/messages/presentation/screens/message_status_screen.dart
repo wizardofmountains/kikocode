@@ -78,6 +78,419 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
     context.go('/message-compose');
   }
 
+  void _showPhoneDialog(String name) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: AppColors.surfaceHighest,
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Title
+                Text(
+                  'Anruf',
+                  style: KikoTypography.withColor(
+                    KikoTypography.appHeadline,
+                    AppColors.textPrimaryKiko,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  name,
+                  style: KikoTypography.withColor(
+                    KikoTypography.appBody,
+                    AppColors.textPrimaryKiko,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Phone number
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceHigh,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: AppColors.surfaceLow,
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.phone,
+                        color: AppColors.textPrimaryKiko,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        '+43 664 123 4567',
+                        style: KikoTypography.withColor(
+                          KikoTypography.appBody,
+                          AppColors.textPrimaryKiko,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Buttons
+                Row(
+                  children: [
+                    // Cancel button
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          side: BorderSide(
+                            color: AppColors.surfaceLow,
+                            width: 2,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          'Abbrechen',
+                          style: KikoTypography.withColor(
+                            KikoTypography.appBody,
+                            AppColors.textPrimaryKiko,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Call button
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // TODO: Implement actual call functionality
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          backgroundColor: AppColors.primaryKiko,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          'Anrufen',
+                          style: KikoTypography.withColor(
+                            KikoTypography.appBody,
+                            AppColors.surfaceHighest,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showInfoDialog(String childName, String emoji) {
+    // Generate parent/guardian information based on child
+    final parentInfo = _getParentInfo(childName);
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: AppColors.surfaceHighest,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title with child info
+                  Row(
+                    children: [
+                      Text(
+                        emoji,
+                        style: const TextStyle(fontSize: 32),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Angehörige',
+                              style: KikoTypography.withColor(
+                                KikoTypography.appHeadline,
+                                AppColors.textPrimaryKiko,
+                              ),
+                            ),
+                            Text(
+                              'Kind: $childName',
+                              style: KikoTypography.withColor(
+                                KikoTypography.appFootnote,
+                                AppColors.captionKiko,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  // Parents info in compact format
+                  _buildParentCard(
+                    name: parentInfo['mother']!,
+                    relation: 'Mutter',
+                    phone: parentInfo['motherPhone']!,
+                    email: parentInfo['motherEmail']!,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildParentCard(
+                    name: parentInfo['father']!,
+                    relation: 'Vater',
+                    phone: parentInfo['fatherPhone']!,
+                    email: parentInfo['fatherEmail']!,
+                  ),
+                  const SizedBox(height: 16),
+                  // Address
+                  _buildInfoRow(
+                    icon: Icons.location_on,
+                    label: 'Adresse',
+                    value: parentInfo['address']!,
+                  ),
+                  const SizedBox(height: 24),
+                  // Close button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        backgroundColor: AppColors.primaryKiko,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        'Schließen',
+                        style: KikoTypography.withColor(
+                          KikoTypography.appBody,
+                          AppColors.surfaceHighest,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Map<String, String> _getParentInfo(String childName) {
+    // Mock parent/guardian data based on child name
+    switch (childName) {
+      case 'Andreas':
+        return {
+          'mother': 'Maria Schmidt',
+          'motherPhone': '+43 664 123 4567',
+          'motherEmail': 'm.schmidt@example.com',
+          'father': 'Thomas Schmidt',
+          'fatherPhone': '+43 664 234 5678',
+          'fatherEmail': 't.schmidt@example.com',
+          'address': 'Hauptstraße 123\n1010 Wien',
+        };
+      case 'Barbara':
+        return {
+          'mother': 'Sarah Müller',
+          'motherPhone': '+43 664 345 6789',
+          'motherEmail': 's.mueller@example.com',
+          'father': 'Michael Müller',
+          'fatherPhone': '+43 664 456 7890',
+          'fatherEmail': 'm.mueller@example.com',
+          'address': 'Ringstraße 45\n1020 Wien',
+        };
+      case 'Kevin':
+        return {
+          'mother': 'Julia Weber',
+          'motherPhone': '+43 664 567 8901',
+          'motherEmail': 'j.weber@example.com',
+          'father': 'Daniel Weber',
+          'fatherPhone': '+43 664 678 9012',
+          'fatherEmail': 'd.weber@example.com',
+          'address': 'Mozartgasse 78\n1030 Wien',
+        };
+      default:
+        return {
+          'mother': 'Anna Mustermann',
+          'motherPhone': '+43 664 111 2222',
+          'motherEmail': 'a.mustermann@example.com',
+          'father': 'Max Mustermann',
+          'fatherPhone': '+43 664 222 3333',
+          'fatherEmail': 'm.mustermann@example.com',
+          'address': 'Beispielstraße 1\n1040 Wien',
+        };
+    }
+  }
+
+  Widget _buildParentCard({
+    required String name,
+    required String relation,
+    required String phone,
+    required String email,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceHigh,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.surfaceLow,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.person,
+                color: AppColors.textPrimaryKiko,
+                size: 18,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                relation,
+                style: KikoTypography.withColor(
+                  KikoTypography.appFootnote,
+                  AppColors.captionKiko,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            name,
+            style: KikoTypography.withColor(
+              KikoTypography.appBody,
+              AppColors.textPrimaryKiko,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Icon(
+                Icons.phone,
+                color: AppColors.captionKiko,
+                size: 14,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                phone,
+                style: KikoTypography.withColor(
+                  KikoTypography.appFootnote,
+                  AppColors.textPrimaryKiko,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              Icon(
+                Icons.email,
+                color: AppColors.captionKiko,
+                size: 14,
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  email,
+                  style: KikoTypography.withColor(
+                    KikoTypography.appFootnote,
+                    AppColors.textPrimaryKiko,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceHigh,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.surfaceLow,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            icon,
+            color: AppColors.textPrimaryKiko,
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: KikoTypography.withColor(
+                    KikoTypography.appFootnote,
+                    AppColors.captionKiko,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: KikoTypography.withColor(
+                    KikoTypography.appBody,
+                    AppColors.textPrimaryKiko,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -237,12 +650,11 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
                                   ChatListItem(
                                     name: chat['name'],
                                     emoji: chat['emoji'],
-                                    onCallTap: () {
-                                      // Handle call
-                                    },
-                                    onInfoTap: () {
-                                      // Show info
-                                    },
+                                    onCallTap: () => _showPhoneDialog(chat['name']),
+                                    onInfoTap: () => _showInfoDialog(
+                                      chat['name'],
+                                      chat['emoji'],
+                                    ),
                                   ),
                                   if (index < _chats.length - 1)
                                     Padding(

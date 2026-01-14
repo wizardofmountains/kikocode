@@ -21,7 +21,7 @@ class ShortcutButton extends StatelessWidget {
       height: 40,
       decoration: BoxDecoration(
         color: AppColors.secondaryKiko,
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         children: [
@@ -32,9 +32,9 @@ class ShortcutButton extends StatelessWidget {
               behavior: HitTestBehavior.opaque,
               child: const Center(
                 child: Icon(
-                  Coolicons.phone,
+                  Coolicons.phone_outline,
                   color: AppColors.surfaceHighest,
-                  size: 20,
+                  size: 22,
                 ),
               ),
             ),
@@ -52,9 +52,9 @@ class ShortcutButton extends StatelessWidget {
               behavior: HitTestBehavior.opaque,
               child: const Center(
                 child: Icon(
-                  Coolicons.info_circle,
+                  Coolicons.info_circle_outline,
                   color: AppColors.surfaceHighest,
-                  size: 20,
+                  size: 22,
                 ),
               ),
             ),
