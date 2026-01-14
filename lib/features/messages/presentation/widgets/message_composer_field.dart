@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:coolicons/coolicons.dart';
 import '../../../../core/design_system/colors.dart';
-import '../../../../core/design_system/spacing.dart';
 import '../../../../core/design_system/kiko_typography.dart';
 
 /// Text area for composing messages with send button
@@ -48,31 +46,29 @@ class _MessageComposerFieldState extends State<MessageComposerField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(
-        minHeight: 50,
-        maxHeight: 150,
-      ),
+      height: 50,
       decoration: BoxDecoration(
         color: AppColors.surfaceHighest,
         border: Border.all(
           color: AppColors.surfaceLow,
           width: 2,
         ),
-        borderRadius: BorderRadius.circular(AppSpacing.radiusXxl),
+        borderRadius: BorderRadius.circular(25),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 14,
-              ),
+              padding: const EdgeInsets.only(left: 23),
               child: TextField(
                 controller: widget.controller,
-                maxLines: null,
-                textInputAction: TextInputAction.newline,
+                maxLines: 1,
+                textInputAction: TextInputAction.send,
+                onSubmitted: (_) {
+                  if (_hasText) {
+                    widget.onSend?.call();
+                  }
+                },
                 style: KikoTypography.withColor(
                   KikoTypography.appBody,
                   AppColors.textPrimaryKiko,
@@ -91,20 +87,20 @@ class _MessageComposerFieldState extends State<MessageComposerField> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 3, bottom: 3),
+            padding: const EdgeInsets.all(3),
             child: GestureDetector(
               onTap: _hasText ? widget.onSend : null,
               child: Container(
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: _hasText
-                      ? AppColors.primaryKiko
-                      : AppColors.captionKiko,
                   shape: BoxShape.circle,
+                  color: _hasText 
+                      ? AppColors.primaryKiko 
+                      : AppColors.captionKiko,
                 ),
-                child: Icon(
-                      Icons.send_rounded,
+                child: const Icon(
+                  Icons.arrow_upward_rounded,
                   color: AppColors.white,
                   size: 20,
                 ),

@@ -24,18 +24,21 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
   final List<Map<String, dynamic>> _groupMessages = [
     {
       'name': 'Laternenwanderung',
+      'icon': '🏮',
       'received': 10,
       'total': 20,
       'progress': 0.50,
     },
     {
       'name': 'Gemüsebuffet',
+      'icon': '🥗',
       'received': 5,
       'total': 20,
       'progress': 0.25,
     },
     {
       'name': 'Pyjamaparty',
+      'icon': '🎉',
       'received': 15,
       'total': 20,
       'progress': 0.75,
@@ -440,6 +443,241 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
     );
   }
 
+  // Generate mockup messages for group chats (events)
+  List<Map<String, dynamic>> _getGroupChatMessages(String eventName) {
+    switch (eventName) {
+      case 'Laternenwanderung':
+        return [
+          {
+            'message': 'Hallo zusammen! Die Laternenwanderung findet am Freitag um 18:00 Uhr statt.',
+            'sender': 'Kindergarten Team',
+            'time': '14:30',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Bitte bringt warme Kleidung und eure Laternen mit! 🏮',
+            'sender': 'Kindergarten Team',
+            'time': '14:31',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Können wir helfen beim Aufbau?',
+            'sender': 'Maria Schmidt',
+            'time': '15:10',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Das wäre super! Wir treffen uns um 17:30 Uhr zum Aufbau.',
+            'sender': 'Kindergarten Team',
+            'time': '15:15',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Andreas freut sich schon sehr darauf! Wir sind dabei. 😊',
+            'sender': 'Du',
+            'time': '15:45',
+            'isCurrentUser': true,
+          },
+        ];
+      case 'Gemüsebuffet':
+        return [
+          {
+            'message': 'Liebe Eltern, nächste Woche veranstalten wir ein Gemüsebuffet! 🥗',
+            'sender': 'Kindergarten Team',
+            'time': '10:00',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Jede Familie kann eine Gemüseplatte mitbringen.',
+            'sender': 'Kindergarten Team',
+            'time': '10:01',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Ich bringe Karotten und Gurken mit!',
+            'sender': 'Sarah Müller',
+            'time': '10:30',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Wir machen einen Paprika-Dip dazu!',
+            'sender': 'Julia Weber',
+            'time': '11:15',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Super Ideen! Ich kümmere mich um Tomaten und Radieschen.',
+            'sender': 'Du',
+            'time': '12:00',
+            'isCurrentUser': true,
+          },
+        ];
+      case 'Pyjamaparty':
+        return [
+          {
+            'message': 'PYJAMAPARTY am Samstag! 🎉',
+            'sender': 'Kindergarten Team',
+            'time': '09:00',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Die Kinder dürfen ihre Lieblingspyjamas und Kuscheltiere mitbringen!',
+            'sender': 'Kindergarten Team',
+            'time': '09:01',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Gibt es auch Übernachtung?',
+            'sender': 'Thomas Schmidt',
+            'time': '09:45',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Nein, wir feiern von 14:00 bis 18:00 Uhr. Die Kinder können aber im Pyjama kommen! 😊',
+            'sender': 'Kindergarten Team',
+            'time': '10:00',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Kevin kann es kaum erwarten! Wir sind dabei! 🎊',
+            'sender': 'Du',
+            'time': '10:30',
+            'isCurrentUser': true,
+          },
+        ];
+      default:
+        return [];
+    }
+  }
+
+  // Generate mockup messages for private chats (with parents)
+  List<Map<String, dynamic>> _getPrivateChatMessages(String childName) {
+    final parentInfo = _getParentInfo(childName);
+    
+    switch (childName) {
+      case 'Andreas':
+        return [
+          {
+            'message': 'Guten Tag Frau Schmidt! Wie geht es Andreas heute?',
+            'sender': 'Du',
+            'time': '08:15',
+            'isCurrentUser': true,
+          },
+          {
+            'message': 'Hallo! Andreas geht es gut, er hat heute morgen super gefrühstückt. 😊',
+            'sender': parentInfo['mother']!,
+            'time': '08:20',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Das freut mich! Er ist heute sehr aktiv und spielt gerade mit den Bauklötzen.',
+            'sender': 'Du',
+            'time': '10:30',
+            'isCurrentUser': true,
+          },
+          {
+            'message': 'Wunderbar! Könnten Sie mir bitte Bescheid geben, wenn er seinen Mittagsschlaf macht?',
+            'sender': parentInfo['mother']!,
+            'time': '10:35',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Natürlich, mache ich gerne!',
+            'sender': 'Du',
+            'time': '10:37',
+            'isCurrentUser': true,
+          },
+        ];
+      case 'Barbara':
+        return [
+          {
+            'message': 'Hallo! Barbara hat heute ihr Lieblingsbuch mitgebracht. 📚',
+            'sender': parentInfo['mother']!,
+            'time': '07:45',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Oh wie schön! Wir werden es später in der Lesezeit anschauen.',
+            'sender': 'Du',
+            'time': '08:00',
+            'isCurrentUser': true,
+          },
+          {
+            'message': 'Barbara hat gerade ein tolles Bild gemalt! Ich schicke gleich ein Foto. 🎨',
+            'sender': 'Du',
+            'time': '11:15',
+            'isCurrentUser': true,
+          },
+          {
+            'message': 'Vielen Dank! Ich freue mich schon darauf! 😊',
+            'sender': parentInfo['mother']!,
+            'time': '11:20',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Können wir morgen etwas früher kommen? Wir haben einen Arzttermin.',
+            'sender': parentInfo['father']!,
+            'time': '14:30',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Ja natürlich, kein Problem!',
+            'sender': 'Du',
+            'time': '14:35',
+            'isCurrentUser': true,
+          },
+        ];
+      case 'Kevin':
+        return [
+          {
+            'message': 'Guten Morgen! Kevin war gestern etwas erkältet. Geht es ihm heute besser?',
+            'sender': 'Du',
+            'time': '08:00',
+            'isCurrentUser': true,
+          },
+          {
+            'message': 'Ja, viel besser! Die Nase läuft noch ein bisschen, aber Fieber hat er keines mehr.',
+            'sender': parentInfo['mother']!,
+            'time': '08:05',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Gut zu hören! Ich behalte ihn im Auge und gebe Bescheid falls sich etwas ändert.',
+            'sender': 'Du',
+            'time': '08:10',
+            'isCurrentUser': true,
+          },
+          {
+            'message': 'Danke! Kevin hat übrigens seine Taschentücher im Rucksack.',
+            'sender': parentInfo['mother']!,
+            'time': '08:12',
+            'isCurrentUser': false,
+          },
+          {
+            'message': 'Kevin spielt jetzt draußen und hat viel Spaß beim Schaukeln! 😊',
+            'sender': 'Du',
+            'time': '10:45',
+            'isCurrentUser': true,
+          },
+          {
+            'message': 'Das ist schön! Frische Luft tut ihm gut. 🌞',
+            'sender': parentInfo['father']!,
+            'time': '10:50',
+            'isCurrentUser': false,
+          },
+        ];
+      default:
+        return [
+          {
+            'message': 'Hallo! Schön Sie kennenzulernen.',
+            'sender': 'Du',
+            'time': '09:00',
+            'isCurrentUser': true,
+          },
+        ];
+    }
+  }
+
   Widget _buildInfoRow({
     required IconData icon,
     required String label,
@@ -596,7 +834,15 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
                                     totalCount: message['total'],
                                     progress: message['progress'],
                                     onTap: () {
-                                      // Navigate to group message detail
+                                      // Navigate to group chat with event-specific data
+                                      context.push(
+                                        '/message/${Uri.encodeComponent(message['name'])}',
+                                        extra: {
+                                          'groupIcon': message['icon'],
+                                          'isGroupChat': true,
+                                          'messages': _getGroupChatMessages(message['name']),
+                                        },
+                                      );
                                     },
                                   ),
                                   if (index < _groupMessages.length - 1)
@@ -647,13 +893,29 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
                               final chat = entry.value;
                               return Column(
                                 children: [
-                                  ChatListItem(
-                                    name: chat['name'],
-                                    emoji: chat['emoji'],
-                                    onCallTap: () => _showPhoneDialog(chat['name']),
-                                    onInfoTap: () => _showInfoDialog(
-                                      chat['name'],
-                                      chat['emoji'],
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Navigate to private chat with parents
+                                      final parentInfo = _getParentInfo(chat['name']);
+                                      context.push(
+                                        '/message/${Uri.encodeComponent('Familie ${chat['name']}')}',
+                                        extra: {
+                                          'groupIcon': chat['emoji'],
+                                          'isGroupChat': false,
+                                          'childName': chat['name'],
+                                          'parentNames': '${parentInfo['mother']} & ${parentInfo['father']}',
+                                          'messages': _getPrivateChatMessages(chat['name']),
+                                        },
+                                      );
+                                    },
+                                    child: ChatListItem(
+                                      name: chat['name'],
+                                      emoji: chat['emoji'],
+                                      onCallTap: () => _showPhoneDialog(chat['name']),
+                                      onInfoTap: () => _showInfoDialog(
+                                        chat['name'],
+                                        chat['emoji'],
+                                      ),
                                     ),
                                   ),
                                   if (index < _chats.length - 1)

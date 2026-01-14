@@ -10,11 +10,19 @@ import '../widgets/message_input.dart';
 class MessageScreen extends StatefulWidget {
   final String groupName;
   final String groupIcon;
+  final List<Map<String, dynamic>>? initialMessages;
+  final bool isGroupChat;
+  final String? childName;
+  final String? parentNames;
 
   const MessageScreen({
     super.key,
     required this.groupName,
     required this.groupIcon,
+    this.initialMessages,
+    this.isGroupChat = true,
+    this.childName,
+    this.parentNames,
   });
 
   @override
@@ -22,44 +30,22 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _MessageScreenState extends State<MessageScreen> {
-  final List<Map<String, dynamic>> _messages = [
-    {
-      'message': 'Hallo zusammen! Wie geht es euch?',
-      'sender': 'David',
-      'time': '09:15',
-      'isCurrentUser': false,
-    },
-    {
-      'message': 'Hallo David! Mir geht es gut, danke! 😊',
-      'sender': 'Anna',
-      'time': '09:17',
-      'isCurrentUser': true,
-    },
-    {
-      'message': 'Super! Hat jemand die Fotos vom letzten Ausflug?',
-      'sender': 'David',
-      'time': '09:18',
-      'isCurrentUser': false,
-    },
-    {
-      'message': 'Ja, ich lade sie gleich hoch!',
-      'sender': 'Maria',
-      'time': '09:20',
-      'isCurrentUser': false,
-    },
-    {
-      'message': 'Danke Maria! Das wäre toll.',
-      'sender': 'Anna',
-      'time': '09:22',
-      'isCurrentUser': true,
-    },
-  ];
+  late List<Map<String, dynamic>> _messages;
 
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    // Initialize messages from widget or use default
+    _messages = widget.initialMessages ?? [
+      {
+        'message': 'Hallo! Willkommen im Chat.',
+        'sender': 'Kindergarten Team',
+        'time': '09:00',
+        'isCurrentUser': false,
+      },
+    ];
     // Scroll to bottom after frame is rendered
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToBottom();
@@ -132,13 +118,28 @@ class _MessageScreenState extends State<MessageScreen> {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                widget.groupName,
-                style: KikoTypography.withColor(
-                  KikoTypography.appBody,
-                  AppColors.textPrimaryKiko,
-                ),
-                overflow: TextOverflow.ellipsis,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    widget.groupName,
+                    style: KikoTypography.withColor(
+                      KikoTypography.appBody,
+                      AppColors.textPrimaryKiko,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (!widget.isGroupChat && widget.parentNames != null)
+                    Text(
+                      widget.parentNames!,
+                      style: KikoTypography.withColor(
+                        KikoTypography.appFootnote,
+                        AppColors.captionKiko,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
               ),
             ),
           ],

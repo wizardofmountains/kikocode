@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:coolicons/coolicons.dart';
 import '../../../../core/design_system/colors.dart';
-import '../../../../core/design_system/spacing.dart';
 import '../../../../core/design_system/kiko_typography.dart';
 
 class MessageInput extends StatefulWidget {
@@ -39,85 +37,77 @@ class _MessageInputState extends State<MessageInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceHighest,
-        border: Border(
-          top: BorderSide(
-            color: AppColors.surfaceLow,
-            width: 1,
-          ),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
+      padding: const EdgeInsets.all(21),
+      decoration: const BoxDecoration(
+        color: AppColors.surfaceBase,
       ),
       child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceBase,
-                  border: Border.all(
-                    color: AppColors.surfaceLow,
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusXxl),
-                ),
-                child: TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    hintText: 'Nachricht schreiben...',
-                    hintStyle: KikoTypography.withColor(
+        child: Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: AppColors.surfaceHighest,
+            border: Border.all(
+              color: AppColors.surfaceLow,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(25),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 23),
+                  child: TextField(
+                    controller: _controller,
+                    decoration: InputDecoration(
+                      hintText: 'Meine Nachricht ...',
+                      hintStyle: KikoTypography.withColor(
+                        KikoTypography.appBody,
+                        AppColors.captionKiko,
+                      ),
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    style: KikoTypography.withColor(
                       KikoTypography.appBody,
-                      AppColors.captionKiko,
+                      AppColors.textPrimaryKiko,
                     ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
+                    maxLines: 1,
+                    textInputAction: TextInputAction.send,
+                    textCapitalization: TextCapitalization.sentences,
+                    onChanged: (value) {
+                      setState(() {
+                        _hasText = value.trim().isNotEmpty;
+                      });
+                    },
+                    onSubmitted: (_) => _handleSend(),
                   ),
-                  style: KikoTypography.withColor(
-                    KikoTypography.appBody,
-                    AppColors.textPrimaryKiko,
-                  ),
-                  maxLines: null,
-                  textCapitalization: TextCapitalization.sentences,
-                  onChanged: (value) {
-                    setState(() {
-                      _hasText = value.trim().isNotEmpty;
-                    });
-                  },
-                  onSubmitted: (_) => _handleSend(),
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
-            GestureDetector(
-              onTap: _hasText ? _handleSend : null,
-              child: Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: _hasText
-                      ? AppColors.primaryKiko
-                      : AppColors.captionKiko,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                      Icons.send_rounded,
-                  color: AppColors.white,
-                  size: 20,
+              Padding(
+                padding: const EdgeInsets.all(3),
+                child: GestureDetector(
+                  onTap: _hasText ? _handleSend : null,
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _hasText 
+                          ? AppColors.primaryKiko 
+                          : AppColors.captionKiko,
+                    ),
+                    child: const Icon(
+                      Icons.arrow_upward_rounded,
+                      color: AppColors.white,
+                      size: 20,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -78,6 +78,10 @@ final GoRouter appRouter = GoRouter(
             return MessageScreen(
               groupName: groupName,
               groupIcon: extra?['groupIcon'] ?? '💬',
+              initialMessages: extra?['messages'] as List<Map<String, dynamic>>?,
+              isGroupChat: extra?['isGroupChat'] ?? true,
+              childName: extra?['childName'] as String?,
+              parentNames: extra?['parentNames'] as String?,
             );
           },
         ),
