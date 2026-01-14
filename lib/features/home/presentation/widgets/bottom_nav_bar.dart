@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:coolicons/coolicons.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/design_system/colors.dart';
 import '../../../../core/design_system/kiko_typography.dart';
 
@@ -35,32 +35,38 @@ class BottomNavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _buildNavItem(
-            icon: Coolicons.home_outline,
+            iconPath: 'assets/images/icons/nav_home.svg',
+            iconSize: 32,
             label: 'Home',
             isActive: currentIndex == 0,
             onTap: () => context.go('/home'),
           ),
           _buildNavItem(
-            icon: Coolicons.calendar,
+            iconPath: 'assets/images/icons/nav_calendar.svg',
+            iconSize: 32,
             label: 'Kalender',
             isActive: currentIndex == 1,
             onTap: () {}, // TODO: Calendar screen
           ),
           _buildNavItem(
-            icon: Coolicons.user_circle,
+            iconPath: 'assets/images/icons/nav_team.svg',
+            iconSize: 32,
             label: 'Team',
             isActive: currentIndex == 2,
+            badgeCount: messageBadgeCount,
             onTap: () {}, // TODO: Team screen
           ),
           _buildNavItem(
-            icon: Coolicons.message,
+            iconPath: 'assets/images/icons/nav_messages_inactive.svg',
+            activeIconPath: 'assets/images/icons/nav_messages_active.svg',
+            iconSize: 32,
             label: 'Nachrichten',
             isActive: currentIndex == 3,
-            badgeCount: messageBadgeCount,
             onTap: () => context.go('/message-overview'),
           ),
           _buildNavItem(
-            icon: Coolicons.settings,
+            iconPath: 'assets/images/icons/nav_settings.svg',
+            iconSize: 32,
             label: 'Einstellungen',
             isActive: currentIndex == 4,
             onTap: () {}, // TODO: Settings screen
@@ -71,7 +77,9 @@ class BottomNavBar extends StatelessWidget {
   }
 
   Widget _buildNavItem({
-    required IconData icon,
+    required String iconPath,
+    String? activeIconPath,
+    required double iconSize,
     required String label,
     required bool isActive,
     required VoidCallback onTap,
@@ -91,25 +99,33 @@ class BottomNavBar extends StatelessWidget {
                 clipBehavior: Clip.none,
                 alignment: Alignment.center,
                 children: [
-                  // Icon container - only visible when active
+                  // Icon container
                   Container(
-                    width: 48,
-                    height: 48,
+                    width: 60,
+                    height: 60,
                     decoration: BoxDecoration(
-                      color: isActive ? AppColors.primaryKiko : Colors.transparent,
-                      borderRadius: BorderRadius.circular(12),
+                      color: isActive ? AppColors.primaryKiko : AppColors.primaryLightKiko,
+                      borderRadius: BorderRadius.circular(13),
                     ),
-                    child: Icon(
-                      icon,
-                      color: isActive ? AppColors.surfaceHighest : AppColors.primaryKiko,
-                      size: 26,
+                    child: Center(
+                      child: SvgPicture.asset(
+                        isActive && activeIconPath != null ? activeIconPath : iconPath,
+                        width: iconSize,
+                        height: iconSize,
+                        fit: BoxFit.contain,
+                        alignment: Alignment.center,
+                        colorFilter: ColorFilter.mode(
+                          isActive ? AppColors.surfaceHighest : AppColors.primaryKiko,
+                          BlendMode.srcIn,
+                        ),
+                      ),
                     ),
                   ),
                   // Badge positioned on top right
                   if (badgeCount != null && badgeCount > 0)
                     Positioned(
-                      top: -2,
-                      right: 2,
+                      top: -6,
+                      right: -6,
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                         decoration: const BoxDecoration(
@@ -139,7 +155,7 @@ class BottomNavBar extends StatelessWidget {
               Text(
                 label,
                 style: KikoTypography.withColor(
-                  KikoTypography.appCaption1,
+                  KikoTypography.appCaption2,
                   AppColors.captionKiko,
                 ),
                 textAlign: TextAlign.center,

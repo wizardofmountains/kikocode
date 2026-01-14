@@ -242,200 +242,239 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          backgroundColor: AppColors.surfaceHighest,
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Title
-                Text(
-                  'Anruf',
-                  style: KikoTypography.withColor(
-                    KikoTypography.appHeadline,
-                    AppColors.textPrimaryKiko,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Kind: $name',
-                  style: KikoTypography.withColor(
-                    KikoTypography.appFootnote,
-                    AppColors.captionKiko,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                // Mother's phone number (Primary contact)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 16,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceHigh,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: AppColors.surfaceLow,
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.phone,
-                        color: AppColors.textPrimaryKiko,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              parentInfo['mother']!,
-                              style: KikoTypography.withColor(
-                                KikoTypography.appBody,
-                                AppColors.textPrimaryKiko,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              'Mutter • Hauptkontakt',
-                              style: KikoTypography.withColor(
-                                KikoTypography.appCaption1,
-                                AppColors.captionKiko,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              parentInfo['motherPhone']!,
-                              style: KikoTypography.withColor(
-                                KikoTypography.appFootnote,
-                                AppColors.textPrimaryKiko,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // Father's phone number (Secondary contact)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 16,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceHigh,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: AppColors.surfaceLow,
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.phone,
-                        color: AppColors.textPrimaryKiko,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              parentInfo['father']!,
-                              style: KikoTypography.withColor(
-                                KikoTypography.appBody,
-                                AppColors.textPrimaryKiko,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              'Vater • Zweitkontakt',
-                              style: KikoTypography.withColor(
-                                KikoTypography.appCaption1,
-                                AppColors.captionKiko,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              parentInfo['fatherPhone']!,
-                              style: KikoTypography.withColor(
-                                KikoTypography.appFootnote,
-                                AppColors.textPrimaryKiko,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                // Buttons
-                Row(
+        String? selectedPhone;
+        
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              backgroundColor: AppColors.surfaceHighest,
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Cancel button
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          side: BorderSide(
-                            color: AppColors.surfaceLow,
-                            width: 2,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                    // Title
+                    Text(
+                      'Anruf',
+                      style: KikoTypography.withColor(
+                        KikoTypography.appHeadline,
+                        AppColors.textPrimaryKiko,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Kind: $name',
+                      style: KikoTypography.withColor(
+                        KikoTypography.appFootnote,
+                        AppColors.captionKiko,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    // Mother's phone number (Primary contact)
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedPhone = parentInfo['motherPhone'];
+                        });
+                      },
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: selectedPhone == parentInfo['motherPhone']
+                              ? AppColors.primaryLightKiko
+                              : AppColors.surfaceHigh,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: selectedPhone == parentInfo['motherPhone']
+                                ? AppColors.primaryKiko
+                                : AppColors.surfaceLow,
+                            width: selectedPhone == parentInfo['motherPhone'] ? 2 : 1,
                           ),
                         ),
-                        child: Text(
-                          'Abbrechen',
-                          style: KikoTypography.withColor(
-                            KikoTypography.appBody,
-                            AppColors.textPrimaryKiko,
-                          ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.phone,
+                              color: selectedPhone == parentInfo['motherPhone']
+                                  ? AppColors.primaryKiko
+                                  : AppColors.textPrimaryKiko,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    parentInfo['mother']!,
+                                    style: KikoTypography.withColor(
+                                      KikoTypography.appBody,
+                                      AppColors.textPrimaryKiko,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    'Mutter • Hauptkontakt',
+                                    style: KikoTypography.withColor(
+                                      KikoTypography.appCaption1,
+                                      AppColors.captionKiko,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    parentInfo['motherPhone']!,
+                                    style: KikoTypography.withColor(
+                                      KikoTypography.appFootnote,
+                                      AppColors.textPrimaryKiko,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    // Call button
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // TODO: Implement actual call functionality
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          backgroundColor: AppColors.primaryKiko,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                    const SizedBox(height: 12),
+                    // Father's phone number (Secondary contact)
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedPhone = parentInfo['fatherPhone'];
+                        });
+                      },
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: selectedPhone == parentInfo['fatherPhone']
+                              ? AppColors.primaryLightKiko
+                              : AppColors.surfaceHigh,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: selectedPhone == parentInfo['fatherPhone']
+                                ? AppColors.primaryKiko
+                                : AppColors.surfaceLow,
+                            width: selectedPhone == parentInfo['fatherPhone'] ? 2 : 1,
                           ),
                         ),
-                        child: Text(
-                          'Anrufen',
-                          style: KikoTypography.withColor(
-                            KikoTypography.appBody,
-                            AppColors.surfaceHighest,
-                          ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.phone,
+                              color: selectedPhone == parentInfo['fatherPhone']
+                                  ? AppColors.primaryKiko
+                                  : AppColors.textPrimaryKiko,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    parentInfo['father']!,
+                                    style: KikoTypography.withColor(
+                                      KikoTypography.appBody,
+                                      AppColors.textPrimaryKiko,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    'Vater • Zweitkontakt',
+                                    style: KikoTypography.withColor(
+                                      KikoTypography.appCaption1,
+                                      AppColors.captionKiko,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    parentInfo['fatherPhone']!,
+                                    style: KikoTypography.withColor(
+                                      KikoTypography.appFootnote,
+                                      AppColors.textPrimaryKiko,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                    ),
+                    const SizedBox(height: 24),
+                    // Buttons
+                    Row(
+                      children: [
+                        // Cancel button
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              side: BorderSide(
+                                color: AppColors.surfaceLow,
+                                width: 2,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(
+                              'Abbrechen',
+                              style: KikoTypography.withColor(
+                                KikoTypography.appBody,
+                                AppColors.textPrimaryKiko,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // Call button - disabled if no phone selected
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: selectedPhone != null
+                                ? () {
+                                    // TODO: Implement actual call functionality with selectedPhone
+                                    Navigator.of(context).pop();
+                                  }
+                                : null,
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              backgroundColor: AppColors.primaryKiko,
+                              disabledBackgroundColor: AppColors.surfaceLow,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(
+                              'Anrufen',
+                              style: KikoTypography.withColor(
+                                KikoTypography.appBody,
+                                selectedPhone != null 
+                                    ? AppColors.surfaceHighest
+                                    : AppColors.captionKiko,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );

@@ -72,3 +72,4 @@ flutter:
   # Assets
   assets:
     - assets/images/LogoLight.svg
+    - assets/images/icons/
