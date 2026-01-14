@@ -1139,7 +1139,7 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
                                       // Navigate to private chat with parents
                                       final parentInfo = _getParentInfo(chat['name']);
                                       context.push(
-                                        '/message/${Uri.encodeComponent('Familie ${chat['name']}')}',
+                                        '/message/${Uri.encodeComponent('Familie von ${chat['name']}')}',
                                         extra: {
                                           'groupIcon': chat['emoji'],
                                           'isGroupChat': false,
