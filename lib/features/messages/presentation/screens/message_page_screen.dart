@@ -173,6 +173,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                     'assets/images/LogoLight.svg',
                     height: 60,
                     width: 149.76,
+                    allowDrawingOutsideViewBox: true,
                   ),
                   const Spacer(),
                   
