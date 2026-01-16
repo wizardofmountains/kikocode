@@ -113,6 +113,10 @@ final GoRouter appRouter = GoRouter(
               initialMessages: extra?['messages'] as List<Map<String, dynamic>>?,
               isGroupChat: extra?['isGroupChat'] ?? true,
               childName: extra?['childName'] as String?,
+              childId: extra?['childId'] as String?,
+              conversationId: extra?['conversationId'] as String?,
+              eventId: extra?['eventId'] as String?,
+              groupMessageId: extra?['groupMessageId'] as String?,
               parentNames: extra?['parentNames'] as String?,
             );
           },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:coolicons/coolicons.dart';
@@ -8,46 +9,26 @@ import '../widgets/message_composer_field.dart';
 import '../widgets/group_selection_field.dart';
 import '../widgets/subject_input_field.dart';
 import '../../domain/models/group.dart';
+import '../providers/messages_providers.dart';
 import '../../../home/presentation/widgets/bottom_nav_bar.dart';
 
 /// Screen for composing a new message
 /// Features: Group selection, Subject selection, Message text area
-class MessagePageScreen extends StatefulWidget {
+class MessagePageScreen extends ConsumerStatefulWidget {
   const MessagePageScreen({super.key});
 
   @override
-  State<MessagePageScreen> createState() => _MessagePageScreenState();
+  ConsumerState<MessagePageScreen> createState() => _MessagePageScreenState();
 }
 
-class _MessagePageScreenState extends State<MessagePageScreen> {
+class _MessagePageScreenState extends ConsumerState<MessagePageScreen> {
   List<Group> _selectedGroups = [];
   final TextEditingController _subjectController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
-  
+
   // FocusNodes for keyboard control
   final FocusNode _subjectFocusNode = FocusNode();
   final FocusNode _messageFocusNode = FocusNode();
-
-  final List<Group> _groups = [
-    const Group(
-      id: '1',
-      name: 'Schmetterling',
-      emoji: '🦋',
-      iconColor: AppColors.secondaryKiko,
-    ),
-    const Group(
-      id: '2',
-      name: 'Marienkäfer',
-      emoji: '🐞',
-      iconColor: AppColors.secondaryKiko,
-    ),
-    const Group(
-      id: '3',
-      name: 'Papagei',
-      emoji: '🦜',
-      iconColor: AppColors.secondaryKiko,
-    ),
-  ];
 
   @override
   void dispose() {
@@ -58,29 +39,67 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
     super.dispose();
   }
 
-  void _sendMessage() {
-    if (_selectedGroups.isNotEmpty &&
-        _subjectController.text.trim().isNotEmpty &&
-        _messageController.text.trim().isNotEmpty) {
-      // TODO: Implement actual message sending
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Nachricht an ${_selectedGroups.length} Gruppe(n) gesendet!',
-          ),
-          duration: const Duration(seconds: 2),
-        ),
-      );
-      
-      // Navigate to message overview
-      context.go('/message-overview');
-    } else {
+  bool _isSending = false;
+
+  Future<void> _sendMessage() async {
+    if (_selectedGroups.isEmpty ||
+        _subjectController.text.trim().isEmpty ||
+        _messageController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Bitte fülle alle Felder aus'),
           duration: Duration(seconds: 2),
         ),
       );
+      return;
+    }
+
+    if (_isSending) return;
+
+    setState(() {
+      _isSending = true;
+    });
+
+    try {
+      final repository = ref.read(groupMessagesRepositoryProvider);
+      await repository.sendGroupMessageToMultiple(
+        groupIds: _selectedGroups.map((g) => g.id).toList(),
+        title: _subjectController.text.trim(),
+        content: _messageController.text.trim(),
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Nachricht an ${_selectedGroups.length} Gruppe(n) gesendet!',
+            ),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+
+        // Invalidate the group messages provider to refresh the list
+        ref.invalidate(groupMessagesWithStatsProvider);
+
+        // Navigate to message overview
+        context.go('/message-overview');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Fehler beim Senden: $e'),
+            backgroundColor: AppColors.error,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSending = false;
+        });
+      }
     }
   }
 
@@ -150,7 +169,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
     if (!_hasUnsavedChanges()) {
       return true;
     }
-    
+
     final result = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -179,7 +198,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Title
                 Text(
                   'Entwurf verwerfen?',
@@ -189,7 +208,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                
+
                 // Description
                 Text(
                   'Deine ungespeicherten Änderungen gehen verloren, wenn du fortfährst.',
@@ -200,7 +219,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Buttons
                 Row(
                   children: [
@@ -228,7 +247,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    
+
                     // Discard Button
                     Expanded(
                       child: ElevatedButton(
@@ -259,7 +278,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
         );
       },
     );
-    
+
     return result ?? false;
   }
 
@@ -272,6 +291,8 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final groupsAsync = ref.watch(groupsProvider);
+
     return Scaffold(
       backgroundColor: AppColors.surfaceBase,
       body: SafeArea(
@@ -298,7 +319,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                     constraints: const BoxConstraints(),
                   ),
                   const Spacer(),
-                  
+
                   // Logo
                   SvgPicture.asset(
                     'assets/images/LogoLight.svg',
@@ -307,7 +328,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                     allowDrawingOutsideViewBox: true,
                   ),
                   const Spacer(),
-                  
+
                   // Profile Picture
                   Container(
                     width: 75,
@@ -326,58 +347,88 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                 ],
               ),
             ),
-            
+
             // Content
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 21),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 12),
-                    
-                    // Title
-                    Text(
-                      'Neue Nachricht',
-                      style: KikoTypography.withColor(
-                        KikoTypography.appTitle1,
-                        AppColors.primaryKiko,
+              child: groupsAsync.when(
+                data: (groups) => SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 21),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 12),
+
+                      // Title
+                      Text(
+                        'Neue Nachricht',
+                        style: KikoTypography.withColor(
+                          KikoTypography.appTitle1,
+                          AppColors.primaryKiko,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 18),
-                    
-                    // Group Selection
-                    GroupSelectionField(
-                      groups: _groups,
-                      selectedGroups: _selectedGroups,
-                      onChanged: (groups) {
-                        setState(() {
-                          _selectedGroups = groups;
-                        });
-                      },
-                      onInfoTap: _showGroupInfo,
-                    ),
-                    const SizedBox(height: 9),
-                    
-                    // Subject Input
-                    SubjectInputField(
-                      controller: _subjectController,
-                      focusNode: _subjectFocusNode,
-                      placeholder: 'Betreff',
-                      onInfoTap: _showSubjectInfo,
-                    ),
-                    const SizedBox(height: 9),
-                    
-                    // Message Composer
-                    MessageComposerField(
-                      controller: _messageController,
-                      focusNode: _messageFocusNode,
-                      onSend: _sendMessage,
-                      placeholder: 'Meine Nachricht ...',
-                    ),
-                    
-                    const SizedBox(height: 50),
-                  ],
+                      const SizedBox(height: 18),
+
+                      // Group Selection
+                      GroupSelectionField(
+                        groups: groups,
+                        selectedGroups: _selectedGroups,
+                        onChanged: (selectedGroups) {
+                          setState(() {
+                            _selectedGroups = selectedGroups;
+                          });
+                        },
+                        onInfoTap: _showGroupInfo,
+                      ),
+                      const SizedBox(height: 9),
+
+                      // Subject Input
+                      SubjectInputField(
+                        controller: _subjectController,
+                        focusNode: _subjectFocusNode,
+                        placeholder: 'Betreff',
+                        onInfoTap: _showSubjectInfo,
+                      ),
+                      const SizedBox(height: 9),
+
+                      // Message Composer
+                      MessageComposerField(
+                        controller: _messageController,
+                        focusNode: _messageFocusNode,
+                        onSend: _sendMessage,
+                        placeholder: 'Meine Nachricht ...',
+                      ),
+
+                      const SizedBox(height: 50),
+                    ],
+                  ),
+                ),
+                loading: () => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                error: (error, stack) => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.error_outline,
+                        color: Colors.red,
+                        size: 48,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Fehler beim Laden der Gruppen',
+                        style: KikoTypography.withColor(
+                          KikoTypography.appBody,
+                          AppColors.error,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextButton(
+                        onPressed: () => ref.invalidate(groupsProvider),
+                        child: const Text('Erneut versuchen'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
