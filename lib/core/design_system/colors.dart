@@ -316,10 +316,6 @@ class AppColors {
   static const Color borderFocus = primary;
 
   // ============= Kiko-Specific Colors (from Figma) =============
-  static const Color surfaceBase = Color(0xFFF3E7CE);
-  static const Color surfaceHigh = Color(0xFFF7EFDE);
-  static const Color surfaceHighest = Color(0xFFFBF7EF);
-  static const Color surfaceLow = Color(0xFFEFDFBD);
   static const Color primaryKiko = Color(0xFFA974C7);
   static const Color primaryLightKiko = Color(0xFFF5DDFF);
   static const Color secondaryKiko = Color(0xFF9ED9C6);

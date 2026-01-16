@@ -22,7 +22,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     // Navigate to login screen after 2 seconds
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
-        context.go('/auth/login');
+        context.go('/login');
       }
     });
   }

@@ -222,7 +222,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     
     if (!mounted) return;
     
-    context.go('/auth/success', extra: {
+    context.go('/auth-success', extra: {
       'username': profile?.name ?? _emailController.text.split('@').first,
       'showFaceId': false,
     });

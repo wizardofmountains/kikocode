@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -61,7 +62,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
     // If no errors, proceed
     if (!hasError) {
-      context.pushReplacement('/auth/loading', extra: widget.username);
+      context.pushReplacement('/loading', extra: widget.username);
     }
   }
 
@@ -163,13 +164,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
               ),
             ),
             
-            // Face ID overlay at top
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: _buildFaceIdOverlay(),
-            ),
+            // Face ID overlay at top - only show on mobile
+            if (!kIsWeb)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: _buildFaceIdOverlay(),
+              ),
           ],
         ),
       ),

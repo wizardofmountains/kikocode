@@ -20,6 +20,7 @@ class AppSpacing {
   // ============= Numeric Spacing Scale =============
   static const double spacing0 = 0.0;
   static const double spacing1 = 4.0;
+  static const double spacing1_5 = 6.0;
   static const double spacing2 = 8.0;
   static const double spacing3 = 12.0;
   static const double spacing4 = 16.0;
@@ -143,6 +144,34 @@ class AppSpacing {
   static const SizedBox horizontalGap2 = SizedBox(width: spacing2);
   static const SizedBox horizontalGap3 = SizedBox(width: spacing3);
   static const SizedBox horizontalGap4 = SizedBox(width: spacing4);
+
+  // Short vertical SizedBox aliases (v = vertical)
+  static const SizedBox v1 = SizedBox(height: spacing1);   // 4px
+  static const SizedBox v2 = SizedBox(height: spacing2);   // 8px
+  static const SizedBox v3 = SizedBox(height: spacing3);   // 12px
+  static const SizedBox v4 = SizedBox(height: spacing4);   // 16px
+  static const SizedBox v5 = SizedBox(height: spacing5);   // 20px
+  static const SizedBox v6 = SizedBox(height: spacing6);   // 24px
+  static const SizedBox v8 = SizedBox(height: spacing8);   // 32px
+  static const SizedBox v10 = SizedBox(height: spacing10); // 40px
+  static const SizedBox v12 = SizedBox(height: spacing12); // 48px
+  static const SizedBox v16 = SizedBox(height: spacing16); // 64px
+  static const SizedBox v20 = SizedBox(height: spacing20); // 80px
+  static const SizedBox v24 = SizedBox(height: spacing24); // 96px
+
+  // Short horizontal SizedBox aliases (h = horizontal)
+  static const SizedBox h1 = SizedBox(width: spacing1);   // 4px
+  static const SizedBox h2 = SizedBox(width: spacing2);   // 8px
+  static const SizedBox h3 = SizedBox(width: spacing3);   // 12px
+  static const SizedBox h4 = SizedBox(width: spacing4);   // 16px
+  static const SizedBox h5 = SizedBox(width: spacing5);   // 20px
+  static const SizedBox h6 = SizedBox(width: spacing6);   // 24px
+  static const SizedBox h8 = SizedBox(width: spacing8);   // 32px
+  static const SizedBox h10 = SizedBox(width: spacing10); // 40px
+  static const SizedBox h12 = SizedBox(width: spacing12); // 48px
+  static const SizedBox h16 = SizedBox(width: spacing16); // 64px
+  static const SizedBox h20 = SizedBox(width: spacing20); // 80px
+  static const SizedBox h24 = SizedBox(width: spacing24); // 96px
 
   // ============= Border Radius =============
   static const double radiusXs = 4.0;

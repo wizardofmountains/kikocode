@@ -36,12 +36,12 @@ final GoRouter appRouter = GoRouter(
         ),
         // Authentication routes
         GoRoute(
-          path: '/auth/login',
+          path: '/login',
           name: 'login',
           builder: (context, state) => const LoginScreen(),
         ),
         GoRoute(
-          path: '/auth/verification',
+          path: '/verification',
           name: 'verification',
           builder: (context, state) {
             final username = state.extra as String? ?? 'User';
@@ -49,7 +49,7 @@ final GoRouter appRouter = GoRouter(
           },
         ),
         GoRoute(
-          path: '/auth/loading',
+          path: '/loading',
           name: 'loading',
           builder: (context, state) {
             final username = state.extra as String? ?? 'User';
@@ -57,12 +57,12 @@ final GoRouter appRouter = GoRouter(
           },
         ),
         GoRoute(
-          path: '/auth/biometric',
+          path: '/biometric',
           name: 'biometric-auth',
           builder: (context, state) => const BiometricAuthScreen(),
         ),
         GoRoute(
-          path: '/auth/success',
+          path: '/auth-success',
           name: 'auth-success',
           builder: (context, state) {
             final extra = state.extra as Map<String, dynamic>?;

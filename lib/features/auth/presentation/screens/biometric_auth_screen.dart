@@ -89,7 +89,7 @@ class _BiometricAuthScreenState extends ConsumerState<BiometricAuthScreen> {
     if (!mounted) return;
 
     context.go(
-      '/auth/success',
+      '/auth-success',
       extra: <String, dynamic>{
         'username': username,
         'showFaceId': true,
@@ -143,7 +143,7 @@ class _BiometricAuthScreenState extends ConsumerState<BiometricAuthScreen> {
 
             // "Use password" fallback is always available while on this screen.
             TextButton(
-              onPressed: () => context.go('/auth/login'),
+              onPressed: () => context.go('/login'),
               child: Text(
                 'Mit Passwort anmelden',
                 style: GoogleFonts.inter(
