@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:coolicons/coolicons.dart';
+import 'package:kikocode/features/auth/providers/auth_providers.dart';
 
 /// Development-only navigation overlay with forward/backward buttons
 /// Only visible in debug mode
-class DevNavigationOverlay extends StatelessWidget {
+class DevNavigationOverlay extends ConsumerWidget {
   final Widget child;
 
   const DevNavigationOverlay({
@@ -13,7 +15,7 @@ class DevNavigationOverlay extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       children: [
         child,
@@ -134,10 +136,28 @@ class DevNavigationOverlay extends StatelessWidget {
                           ],
                         ),
                       ),
+                      const PopupMenuDivider(),
+                      const PopupMenuItem(
+                        value: '_logout',
+                        child: Row(
+                          children: [
+                            Icon(Coolicons.log_out, size: 18, color: Colors.red),
+                            SizedBox(width: 8),
+                            Text('Logout', style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
                     ],
-                    onSelected: (route) {
+                    onSelected: (value) async {
                       try {
-                        context.go(route);
+                        if (value == '_logout') {
+                          await ref.read(authStateProvider.notifier).signOut();
+                          if (context.mounted) {
+                            context.go('/');
+                          }
+                        } else {
+                          context.go(value);
+                        }
                       } catch (e) {
                         debugPrint('Cannot navigate: $e');
                       }

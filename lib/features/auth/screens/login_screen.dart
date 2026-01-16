@@ -205,12 +205,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       if (shouldEnable == true) {
         // Authenticate once to confirm setup
-        final authenticated = await biometricService.authenticate(
+        debugPrint('LoginScreen: User chose to enable biometric');
+        final result = await biometricService.authenticate(
           localizedReason: '$biometricName einrichten',
         );
-        
-        if (authenticated) {
+
+        debugPrint('LoginScreen: Biometric auth result = ${result.isSuccess}');
+        if (result.isSuccess) {
           await biometricService.setBiometricEnabled(true);
+          debugPrint('LoginScreen: Biometric enabled and saved!');
+
+          // Verify it was saved
+          final verified = await biometricService.isBiometricEnabled();
+          debugPrint('LoginScreen: Verification - isBiometricEnabled = $verified');
         }
       }
     }
@@ -322,7 +329,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               right: 0,
               child: Center(
                 child: SizedBox(
-                  width: 120,
+                  width: 150,
                   child: AppButton(
                     label: 'Anmelden',
                     onPressed: _isLoading ? () {} : _handleLogin,

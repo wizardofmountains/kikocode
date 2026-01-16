@@ -9,6 +9,7 @@ class Guardian {
   final String? address;
   final String relationship;
   final bool isPrimaryContact;
+  final String? avatarUrl;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -22,6 +23,7 @@ class Guardian {
     this.address,
     this.relationship = 'parent',
     this.isPrimaryContact = false,
+    this.avatarUrl,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -56,6 +58,7 @@ class Guardian {
       address: json['address'] as String?,
       relationship: json['relationship'] as String? ?? 'parent',
       isPrimaryContact: json['is_primary_contact'] as bool? ?? false,
+      avatarUrl: json['avatar_url'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
@@ -72,6 +75,7 @@ class Guardian {
       'address': address,
       'relationship': relationship,
       'is_primary_contact': isPrimaryContact,
+      'avatar_url': avatarUrl,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
@@ -87,6 +91,7 @@ class Guardian {
     String? address,
     String? relationship,
     bool? isPrimaryContact,
+    String? avatarUrl,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -100,6 +105,7 @@ class Guardian {
       address: address ?? this.address,
       relationship: relationship ?? this.relationship,
       isPrimaryContact: isPrimaryContact ?? this.isPrimaryContact,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

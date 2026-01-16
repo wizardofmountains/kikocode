@@ -71,11 +71,19 @@ class _StartupScreenState extends ConsumerState<StartupScreen> {
       final biometricService = ref.read(biometricServiceProvider);
       final isBiometricEnabled = await biometricService.isBiometricEnabled();
       final isBiometricAvailable = await biometricService.isBiometricAvailable();
+      final hasBiometricsEnrolled = await biometricService.hasBiometricsEnrolled();
+
+      // Debug logging
+      debugPrint('StartupScreen: user authenticated = true');
+      debugPrint('StartupScreen: isBiometricEnabled = $isBiometricEnabled');
+      debugPrint('StartupScreen: isBiometricAvailable = $isBiometricAvailable');
+      debugPrint('StartupScreen: hasBiometricsEnrolled = $hasBiometricsEnrolled');
 
       if (!mounted) return;
 
       if (isBiometricEnabled && isBiometricAvailable) {
         // User has biometric enabled → go to biometric auth screen
+        debugPrint('StartupScreen: Navigating to /biometric');
         context.go('/biometric');
       } else {
         // User is authenticated but biometric not enabled → go to success screen

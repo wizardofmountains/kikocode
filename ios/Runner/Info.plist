@@ -47,5 +47,9 @@
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Verwenden Sie Face ID, um die App schnell zu entsperren</string>
+	<key>NSCameraUsageDescription</key>
+	<string>KIKO benötigt Zugriff auf die Kamera um Profilbilder aufzunehmen.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>KIKO benötigt Zugriff auf die Fotobibliothek um Profilbilder auszuwählen.</string>
 </dict>
 </plist>

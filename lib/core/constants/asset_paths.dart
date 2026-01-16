@@ -45,10 +45,39 @@ class AssetPaths {
   // static const String bgGradientPurple = '$_images/backgrounds/bg_gradient_purple.png';
   
   // ===== AVATARS =====
-  
-  // Add avatar paths as they are added
-  // Example:
-  // static const String avatarPlaceholder = '$_images/avatars/avatar_placeholder.png';
+
+  /// Base path for avatar images
+  static const String _avatars = '$_images/avatars';
+
+  /// Predefined animal avatars
+  static const String avatarBear = '$_avatars/avatar_bear.png';
+  static const String avatarBunny = '$_avatars/avatar_bunny.png';
+  static const String avatarCat = '$_avatars/avatar_cat.png';
+  static const String avatarDog = '$_avatars/avatar_dog.png';
+  static const String avatarElephant = '$_avatars/avatar_elephant.png';
+  static const String avatarFox = '$_avatars/avatar_fox.png';
+  static const String avatarGiraffe = '$_avatars/avatar_giraffe.png';
+  static const String avatarKoala = '$_avatars/avatar_koala.png';
+  static const String avatarLion = '$_avatars/avatar_lion.png';
+  static const String avatarOwl = '$_avatars/avatar_owl.png';
+  static const String avatarPanda = '$_avatars/avatar_panda.png';
+  static const String avatarPenguin = '$_avatars/avatar_penguin.png';
+
+  /// List of all predefined avatars for avatar picker
+  static const List<String> predefinedAvatars = [
+    avatarBear,
+    avatarBunny,
+    avatarCat,
+    avatarDog,
+    avatarElephant,
+    avatarFox,
+    avatarGiraffe,
+    avatarKoala,
+    avatarLion,
+    avatarOwl,
+    avatarPanda,
+    avatarPenguin,
+  ];
   
   // ===== ANIMATIONS =====
   

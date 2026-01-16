@@ -25,7 +25,7 @@ class UserProfile {
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
       id: json['id'] as String,
-      username: json['username'] as String,
+      username: (json['username'] as String?) ?? '',
       displayName: json['display_name'] as String?,
       avatarUrl: json['avatar_url'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
@@ -164,5 +164,27 @@ class ProfileRepository {
           if (data.isEmpty) return null;
           return UserProfile.fromJson(data.first);
         });
+  }
+
+  /// Clear the current user's avatar
+  Future<UserProfile> clearAvatar() async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) {
+      throw Exception('No authenticated user');
+    }
+
+    final updates = <String, dynamic>{
+      'avatar_url': null,
+      'updated_at': DateTime.now().toIso8601String(),
+    };
+
+    final response = await _client
+        .from(_tableName)
+        .update(updates)
+        .eq('id', userId)
+        .select()
+        .single();
+
+    return UserProfile.fromJson(response);
   }
 }

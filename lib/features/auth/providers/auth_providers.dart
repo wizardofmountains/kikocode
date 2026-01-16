@@ -62,6 +62,12 @@ final biometricAvailableProvider = FutureProvider<bool>((ref) async {
   return biometricService.isBiometricAvailable();
 });
 
+/// Whether biometrics are enrolled (not just available on device)
+final biometricEnrolledProvider = FutureProvider<bool>((ref) async {
+  final biometricService = ref.watch(biometricServiceProvider);
+  return biometricService.hasBiometricsEnrolled();
+});
+
 /// Whether the user has enabled biometric authentication
 final biometricEnabledProvider = FutureProvider<bool>((ref) async {
   final biometricService = ref.watch(biometricServiceProvider);
@@ -72,6 +78,12 @@ final biometricEnabledProvider = FutureProvider<bool>((ref) async {
 final biometricTypeNameProvider = FutureProvider<String>((ref) async {
   final biometricService = ref.watch(biometricServiceProvider);
   return biometricService.getBiometricTypeName();
+});
+
+/// Whether biometrics have changed since setup (security check)
+final biometricsChangedProvider = FutureProvider<bool>((ref) async {
+  final biometricService = ref.watch(biometricServiceProvider);
+  return biometricService.haveBiometricsChanged();
 });
 
 // ============================================================================
