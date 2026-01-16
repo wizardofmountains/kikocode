@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'colors.dart';
 import 'typography.dart';
+import 'kiko_typography.dart';
 import 'spacing.dart';
 import 'borders.dart';
 import 'shadows.dart';
@@ -19,58 +20,51 @@ class AppTheme {
 
       // Color Scheme
       colorScheme: ColorScheme.light(
-        primary: AppColors.primary,
-        onPrimary: AppColors.textOnPrimary,
-        primaryContainer: AppColors.purple100,
-        onPrimaryContainer: AppColors.purple900,
-        
-        secondary: AppColors.secondary,
-        onSecondary: AppColors.textOnSecondary,
-        secondaryContainer: AppColors.indigo100,
-        onSecondaryContainer: AppColors.indigo900,
-        
-        tertiary: AppColors.pink500,
-        onTertiary: AppColors.white,
-        tertiaryContainer: AppColors.pink100,
-        onTertiaryContainer: AppColors.pink900,
-        
+        primary: AppColors.primaryKiko,
+        onPrimary: AppColors.surfaceHigh,
+        primaryContainer: AppColors.primaryLightKiko,
+        onPrimaryContainer: AppColors.primaryKiko,
+        secondary: AppColors.secondaryKiko,
+        onSecondary: AppColors.textPrimaryKiko,
+        secondaryContainer: AppColors.secondaryLightKiko,
+        onSecondaryContainer: AppColors.textPrimaryKiko,
+        tertiary: AppColors.primaryLightKiko,
+        onTertiary: AppColors.primaryKiko,
+        tertiaryContainer: AppColors.surfaceHigh,
+        onTertiaryContainer: AppColors.textPrimaryKiko,
         error: AppColors.error,
         onError: AppColors.white,
         errorContainer: AppColors.red100,
         onErrorContainer: AppColors.red900,
-        
-        surface: AppColors.surface,
-        onSurface: AppColors.textPrimary,
-        surfaceContainerHighest: AppColors.surfaceContainerHigh,
-        
-        outline: AppColors.border,
-        outlineVariant: AppColors.borderLight,
-        
+        surface: AppColors.surfaceHighest,
+        onSurface: AppColors.textPrimaryKiko,
+        surfaceContainerHighest: AppColors.surfaceHigh,
+        outline: AppColors.surfaceLow,
+        outlineVariant: AppColors.surfaceLow,
         shadow: AppColors.black,
         scrim: AppColors.black,
-        
-        inverseSurface: AppColors.gray900,
-        onInverseSurface: AppColors.white,
-        inversePrimary: AppColors.purple300,
+        inverseSurface: AppColors.textPrimaryKiko,
+        onInverseSurface: AppColors.surfaceHighest,
+        inversePrimary: AppColors.primaryLightKiko,
       ),
 
       // Scaffold
-      scaffoldBackgroundColor: AppColors.background,
+      scaffoldBackgroundColor: AppColors.surfaceBase,
 
       // App Bar
       appBarTheme: AppBarTheme(
         centerTitle: false,
         elevation: 0,
-        scrolledUnderElevation: 1,
-        backgroundColor: AppColors.surface,
-        foregroundColor: AppColors.textPrimary,
-        surfaceTintColor: AppColors.primary,
-        shadowColor: AppColors.black.withOpacity(0.1),
-        titleTextStyle: AppTypography.h5.copyWith(
-          color: AppColors.textPrimary,
+        scrolledUnderElevation: 0,
+        backgroundColor: AppColors.surfaceHighest,
+        foregroundColor: AppColors.textPrimaryKiko,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        titleTextStyle: KikoTypography.appHeadline.copyWith(
+          color: AppColors.textPrimaryKiko,
         ),
         iconTheme: const IconThemeData(
-          color: AppColors.textPrimary,
+          color: AppColors.textPrimaryKiko,
         ),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
@@ -78,14 +72,14 @@ class AppTheme {
       // Card
       cardTheme: CardThemeData(
         elevation: 0,
-        color: AppColors.surface,
-        shadowColor: AppColors.black.withOpacity(0.1),
-        surfaceTintColor: AppColors.surface,
+        color: AppColors.surfaceHighest,
+        shadowColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: AppBorders.xl,
+          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
           side: const BorderSide(
-            color: AppColors.borderLight,
-            width: AppBorders.widthThin,
+            color: AppColors.surfaceLow,
+            width: 2,
           ),
         ),
         margin: AppSpacing.all4,
@@ -94,10 +88,10 @@ class AppTheme {
       // Elevated Button
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          foregroundColor: AppColors.textOnPrimary,
-          backgroundColor: AppColors.primary,
-          disabledForegroundColor: AppColors.textDisabled,
-          disabledBackgroundColor: AppColors.gray300,
+          foregroundColor: AppColors.surfaceHigh,
+          backgroundColor: AppColors.primaryKiko,
+          disabledForegroundColor: AppColors.surfaceHigh,
+          disabledBackgroundColor: AppColors.primaryLightKiko,
           elevation: 0,
           shadowColor: Colors.transparent,
           padding: AppSpacing.symmetric(
@@ -105,103 +99,108 @@ class AppTheme {
             vertical: AppSpacing.buttonPaddingVertical,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: AppBorders.lg,
+            borderRadius: BorderRadius.circular(AppSpacing.tabBarItemRadius),
+            side: const BorderSide(
+              color: AppColors.primaryLightKiko,
+              width: 2,
+            ),
           ),
-          textStyle: AppTypography.buttonBase,
-          minimumSize: const Size(64, 48),
+          textStyle: KikoTypography.appHeadline,
+          minimumSize: const Size(64, 50),
         ),
       ),
 
       // Text Button
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: AppColors.primary,
-          disabledForegroundColor: AppColors.textDisabled,
+          foregroundColor: AppColors.primaryKiko,
+          disabledForegroundColor: AppColors.captionKiko,
           padding: AppSpacing.symmetric(
             horizontal: AppSpacing.buttonPaddingHorizontal,
             vertical: AppSpacing.buttonPaddingVertical,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: AppBorders.lg,
+            borderRadius: BorderRadius.circular(AppSpacing.tabBarItemRadius),
           ),
-          textStyle: AppTypography.buttonBase,
-          minimumSize: const Size(64, 48),
+          textStyle: KikoTypography.appHeadline,
+          minimumSize: const Size(64, 50),
         ),
       ),
 
       // Outlined Button
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.primary,
-          disabledForegroundColor: AppColors.textDisabled,
+          foregroundColor: AppColors.primaryKiko,
+          disabledForegroundColor: AppColors.captionKiko,
           side: const BorderSide(
-            color: AppColors.border,
-            width: AppBorders.widthThin,
+            color: AppColors.primaryLightKiko,
+            width: 2,
           ),
           padding: AppSpacing.symmetric(
             horizontal: AppSpacing.buttonPaddingHorizontal,
             vertical: AppSpacing.buttonPaddingVertical,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: AppBorders.lg,
+            borderRadius: BorderRadius.circular(AppSpacing.tabBarItemRadius),
           ),
-          textStyle: AppTypography.buttonBase,
-          minimumSize: const Size(64, 48),
+          textStyle: KikoTypography.appHeadline,
+          minimumSize: const Size(64, 50),
         ),
       ),
 
       // Floating Action Button
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.textOnPrimary,
-        elevation: 4,
+        backgroundColor: AppColors.primaryKiko,
+        foregroundColor: AppColors.surfaceHigh,
+        elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: AppBorders.xl2,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXxl),
+          side: const BorderSide(
+            color: AppColors.primaryLightKiko,
+            width: 2,
+          ),
         ),
       ),
 
       // Input Decoration  
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.surface,
+        fillColor: AppColors.surfaceHighest,
         contentPadding: AppSpacing.symmetric(
           horizontal: AppSpacing.inputPaddingHorizontal,
           vertical: AppSpacing.inputPaddingVertical,
         ),
-        border: UnderlineInputBorder(
-          borderRadius: AppBorders.lg,
-          borderSide: const BorderSide(color: AppColors.border, width: AppBorders.widthThin),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXxl),
+          borderSide: const BorderSide(color: AppColors.surfaceLow, width: 2),
         ),
-        enabledBorder: UnderlineInputBorder(
-          borderRadius: AppBorders.lg,
-          borderSide: const BorderSide(color: AppColors.border, width: AppBorders.widthThin),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXxl),
+          borderSide: const BorderSide(color: AppColors.surfaceLow, width: 2),
         ),
-        focusedBorder: UnderlineInputBorder(
-          borderRadius: AppBorders.lg,
-          borderSide: const BorderSide(color: AppColors.borderFocus, width: AppBorders.width2),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXxl),
+          borderSide: const BorderSide(color: AppColors.secondaryKiko, width: 2),
         ),
-        errorBorder: UnderlineInputBorder(
-          borderRadius: AppBorders.lg,
-          borderSide: const BorderSide(color: AppColors.error, width: AppBorders.widthThin),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXxl),
+          borderSide: const BorderSide(color: AppColors.error, width: 2),
         ),
-        focusedErrorBorder: UnderlineInputBorder(
-          borderRadius: AppBorders.lg,
-          borderSide: const BorderSide(
-            color: AppColors.error,
-            width: AppBorders.width2,
-          ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXxl),
+          borderSide: const BorderSide(color: AppColors.error, width: 2),
         ),
-        labelStyle: AppTypography.bodyBase.copyWith(
-          color: AppColors.textSecondary,
+        labelStyle: KikoTypography.appBody.copyWith(
+          color: AppColors.captionKiko,
         ),
-        hintStyle: AppTypography.bodyBase.copyWith(
-          color: AppColors.textTertiary,
+        hintStyle: KikoTypography.appBody.copyWith(
+          color: AppColors.captionKiko,
         ),
-        errorStyle: AppTypography.bodySmall.copyWith(
+        errorStyle: KikoTypography.appFootnote.copyWith(
           color: AppColors.error,
         ),
-        prefixIconColor: AppColors.textSecondary,
-        suffixIconColor: AppColors.textSecondary,
+        prefixIconColor: AppColors.textPrimaryKiko,
+        suffixIconColor: AppColors.textPrimaryKiko,
       ),
 
       // Checkbox
@@ -361,8 +360,8 @@ class AppTheme {
 
       // Divider
       dividerTheme: const DividerThemeData(
-        color: AppColors.border,
-        thickness: AppBorders.widthThin,
+        color: AppColors.surfaceLow,
+        thickness: 2,
         space: AppSpacing.spacing4,
       ),
 
@@ -370,71 +369,71 @@ class AppTheme {
       listTileTheme: ListTileThemeData(
         contentPadding: AppSpacing.h4v0,
         minLeadingWidth: 40,
-        iconColor: AppColors.textSecondary,
-        textColor: AppColors.textPrimary,
-        titleTextStyle: AppTypography.bodyBase.copyWith(
-          color: AppColors.textPrimary,
+        iconColor: AppColors.textPrimaryKiko,
+        textColor: AppColors.textPrimaryKiko,
+        titleTextStyle: KikoTypography.appBody.copyWith(
+          color: AppColors.textPrimaryKiko,
         ),
-        subtitleTextStyle: AppTypography.bodySmall.copyWith(
-          color: AppColors.textSecondary,
+        subtitleTextStyle: KikoTypography.appFootnote.copyWith(
+          color: AppColors.captionKiko,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: AppBorders.lg,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         ),
       ),
 
       // Icon
       iconTheme: const IconThemeData(
-        color: AppColors.textPrimary,
+        color: AppColors.textPrimaryKiko,
         size: 24,
       ),
 
       // Text Theme
       textTheme: TextTheme(
-        displayLarge: AppTypography.display5.copyWith(
-          color: AppColors.textPrimary,
+        displayLarge: KikoTypography.appTitle1.copyWith(
+          color: AppColors.textPrimaryKiko,
         ),
-        displayMedium: AppTypography.display6.copyWith(
-          color: AppColors.textPrimary,
+        displayMedium: KikoTypography.appTitle1.copyWith(
+          color: AppColors.textPrimaryKiko,
         ),
-        displaySmall: AppTypography.h1.copyWith(
-          color: AppColors.textPrimary,
+        displaySmall: KikoTypography.appHeadline.copyWith(
+          color: AppColors.textPrimaryKiko,
         ),
-        headlineLarge: AppTypography.h2.copyWith(
-          color: AppColors.textPrimary,
+        headlineLarge: KikoTypography.appHeadline.copyWith(
+          color: AppColors.textPrimaryKiko,
         ),
-        headlineMedium: AppTypography.h3.copyWith(
-          color: AppColors.textPrimary,
+        headlineMedium: KikoTypography.appHeadline.copyWith(
+          color: AppColors.textPrimaryKiko,
         ),
-        headlineSmall: AppTypography.h4.copyWith(
-          color: AppColors.textPrimary,
+        headlineSmall: KikoTypography.appHeadline.copyWith(
+          color: AppColors.textPrimaryKiko,
         ),
-        titleLarge: AppTypography.h5.copyWith(
-          color: AppColors.textPrimary,
+        titleLarge: KikoTypography.appHeadline.copyWith(
+          color: AppColors.textPrimaryKiko,
         ),
-        titleMedium: AppTypography.h6.copyWith(
-          color: AppColors.textPrimary,
+        titleMedium: KikoTypography.appBody.copyWith(
+          color: AppColors.textPrimaryKiko,
         ),
-        titleSmall: AppTypography.labelLarge.copyWith(
-          color: AppColors.textPrimary,
+        titleSmall: KikoTypography.appFootnote.copyWith(
+          color: AppColors.captionKiko,
         ),
-        bodyLarge: AppTypography.bodyLarge.copyWith(
-          color: AppColors.textPrimary,
+        bodyLarge: KikoTypography.appBody.copyWith(
+          color: AppColors.textPrimaryKiko,
         ),
-        bodyMedium: AppTypography.bodyBase.copyWith(
-          color: AppColors.textPrimary,
+        bodyMedium: KikoTypography.appBody.copyWith(
+          color: AppColors.textPrimaryKiko,
         ),
-        bodySmall: AppTypography.bodySmall.copyWith(
-          color: AppColors.textSecondary,
+        bodySmall: KikoTypography.appFootnote.copyWith(
+          color: AppColors.captionKiko,
         ),
-        labelLarge: AppTypography.labelLarge.copyWith(
-          color: AppColors.textPrimary,
+        labelLarge: KikoTypography.appHeadline.copyWith(
+          color: AppColors.textPrimaryKiko,
         ),
-        labelMedium: AppTypography.labelBase.copyWith(
-          color: AppColors.textPrimary,
+        labelMedium: KikoTypography.appFootnote.copyWith(
+          color: AppColors.captionKiko,
         ),
-        labelSmall: AppTypography.labelSmall.copyWith(
-          color: AppColors.textSecondary,
+        labelSmall: KikoTypography.appCaption2.copyWith(
+          color: AppColors.captionKiko,
         ),
       ),
     );

@@ -87,9 +87,19 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) => const GroupSelectionScreen(),
         ),
         GoRoute(
+          path: '/message-compose',
+          name: 'message-compose',
+          builder: (context, state) => const MessagePageScreen(),
+        ),
+        GoRoute(
+          path: '/message-overview',
+          name: 'message-overview',
+          builder: (context, state) => const MessageStatusScreen(),
+        ),
+        GoRoute(
           path: '/messages',
           name: 'messages',
-          builder: (context, state) => const MessagePageScreen(),
+          builder: (context, state) => const MessageStatusScreen(),
         ),
         GoRoute(
           path: '/message/:groupName',
@@ -100,6 +110,10 @@ final GoRouter appRouter = GoRouter(
             return MessageScreen(
               groupName: groupName,
               groupIcon: extra?['groupIcon'] ?? '💬',
+              initialMessages: extra?['messages'] as List<Map<String, dynamic>>?,
+              isGroupChat: extra?['isGroupChat'] ?? true,
+              childName: extra?['childName'] as String?,
+              parentNames: extra?['parentNames'] as String?,
             );
           },
         ),
