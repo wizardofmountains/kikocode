@@ -16,8 +16,8 @@ import 'package:kikocode/features/auth/providers/auth_providers.dart';
 /// - Checks authentication status via Supabase
 /// - Checks biometric preference for returning users
 /// - Routes to appropriate screen:
-///   - Authenticated + Biometric enabled → /auth/biometric
-///   - Authenticated + Biometric disabled → /auth/success
+///   - Authenticated + Biometric enabled → /biometric
+///   - Authenticated + Biometric disabled → /auth-success
 ///   - Not authenticated → /welcome
 ///   - Error → /welcome (fail-safe)
 class StartupScreen extends ConsumerStatefulWidget {
@@ -76,14 +76,14 @@ class _StartupScreenState extends ConsumerState<StartupScreen> {
 
       if (isBiometricEnabled && isBiometricAvailable) {
         // User has biometric enabled → go to biometric auth screen
-        context.go('/auth/biometric');
+        context.go('/biometric');
       } else {
         // User is authenticated but biometric not enabled → go to success screen
         // Fetch profile for username
         final profile = await ref.read(profileRepositoryProvider).getCurrentProfile();
         if (!mounted) return;
         
-        context.go('/auth/success', extra: {
+        context.go('/auth-success', extra: {
           'username': profile?.name,
           'showFaceId': false,
         });

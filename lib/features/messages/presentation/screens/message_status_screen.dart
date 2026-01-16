@@ -26,21 +26,21 @@ class _MessageStatusScreenState extends State<MessageStatusScreen> {
   final List<Map<String, dynamic>> _groupMessages = [
     {
       'name': 'Laternenwanderung',
-      'icon': '🏮',
+      'icon': '',
       'received': 10,
       'total': 20,
       'progress': 0.50,
     },
     {
       'name': 'Gemüsebuffet',
-      'icon': '🥗',
+      'icon': '',
       'received': 5,
       'total': 20,
       'progress': 0.25,
     },
     {
       'name': 'Pyjamaparty',
-      'icon': '🎉',
+      'icon': '',
       'received': 15,
       'total': 20,
       'progress': 0.75,

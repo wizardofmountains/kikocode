@@ -12,7 +12,7 @@ import 'package:kikocode/features/auth/providers/auth_providers.dart';
 /// UX flow (iOS-optimised):
 /// - As soon as the screen is visible, the system Face ID sheet appears.
 /// - On success → play the Face ID success animation, then route to
-///   `/auth/success` so the dedicated success screen owns the greeting + logo
+///   `/auth-success` so the dedicated success screen owns the greeting + logo
 ///   animations.
 /// - On failure/cancel → keep the user on this screen, offer a retry button
 ///   and a "Mit Passwort anmelden" fallback to the email/password login.

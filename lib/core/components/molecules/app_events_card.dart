@@ -128,7 +128,7 @@ class AppEventsCard extends StatelessWidget {
               style: AppTypography.bodyBase.copyWith(
                 color: textColor,
                 fontWeight: event.isActive
-                    ? AppTypography.medium
+                    ? AppTypography.semiBold
                     : AppTypography.regular,
               ),
             ),
@@ -140,7 +140,7 @@ class AppEventsCard extends StatelessWidget {
               style: AppTypography.bodyBase.copyWith(
                 color: textColor,
                 fontWeight: event.isActive
-                    ? AppTypography.medium
+                    ? AppTypography.semiBold
                     : AppTypography.regular,
               ),
             ),

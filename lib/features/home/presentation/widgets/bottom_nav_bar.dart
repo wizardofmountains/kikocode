@@ -26,7 +26,7 @@ class BottomNavBar extends StatelessWidget {
         color: AppColors.surfaceHighest,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 8,
             offset: const Offset(0, -4),
           ),
@@ -72,7 +72,6 @@ class BottomNavBar extends StatelessWidget {
             iconSize: 32,
             label: 'Team',
             isActive: currentIndex == 2,
-            badgeCount: messageBadgeCount,
             onTap: () async {
               if (onNavigationAttempt != null) {
                 final canNavigate = await onNavigationAttempt!();
@@ -87,6 +86,7 @@ class BottomNavBar extends StatelessWidget {
             iconSize: 32,
             label: 'Nachrichten',
             isActive: currentIndex == 3,
+            badgeCount: messageBadgeCount,
             onTap: () async {
               if (onNavigationAttempt != null) {
                 final canNavigate = await onNavigationAttempt!();
