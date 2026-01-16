@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:kikocode/core/design_system/design_system.dart';
+import 'package:kikocode/features/messages/presentation/providers/messages_providers.dart';
+import 'package:kikocode/features/messages/domain/models/group.dart';
 
-class GroupsSection extends StatelessWidget {
+class GroupsSection extends ConsumerWidget {
   const GroupsSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final groups = [
-      _GroupData(emoji: '\u{1F98B}', name: 'Schmetterling'), // butterfly
-      _GroupData(emoji: '\u{1F41E}', name: 'Marienkäfer'), // ladybug
-      _GroupData(emoji: '\u{1F99C}', name: 'Papagei'), // parrot
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final groupsAsync = ref.watch(groupsProvider);
 
     return Container(
       padding: AppSpacing.all5,
@@ -31,28 +30,77 @@ class GroupsSection extends StatelessWidget {
             style: AppTypography.h5,
           ),
           AppSpacing.v4,
-          // Group items with dividers
-          ...groups.asMap().entries.map((entry) {
-            final index = entry.key;
-            final group = entry.value;
-            return Column(
-              children: [
-                _buildGroupItem(
-                  context,
-                  emoji: group.emoji,
-                  name: group.name,
+          groupsAsync.when(
+            data: (groups) => _buildGroupsList(context, groups),
+            loading: () => const Center(
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: CircularProgressIndicator(),
+              ),
+            ),
+            error: (error, stack) => SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      color: AppColors.error,
+                      size: 32,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Fehler beim Laden der Gruppen',
+                      style: AppTypography.bodySmall.copyWith(
+                        color: AppColors.error,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: () => ref.invalidate(groupsProvider),
+                      child: const Text('Erneut versuchen'),
+                    ),
+                  ],
                 ),
-                if (index < groups.length - 1)
-                  Divider(
-                    color: AppColors.surfaceLow,
-                    height: 24,
-                    thickness: 1,
-                  ),
-              ],
-            );
-          }),
+              ),
+            ),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildGroupsList(BuildContext context, List<Group> groups) {
+    if (groups.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(16),
+        child: Text('Keine Gruppen vorhanden'),
+      );
+    }
+
+    return Column(
+      children: groups.asMap().entries.map((entry) {
+        final index = entry.key;
+        final group = entry.value;
+        return Column(
+          children: [
+            _buildGroupItem(
+              context,
+              emoji: group.emoji,
+              name: group.name,
+              groupId: group.id,
+            ),
+            if (index < groups.length - 1)
+              Divider(
+                color: AppColors.surfaceLow,
+                height: 24,
+                thickness: 1,
+              ),
+          ],
+        );
+      }).toList(),
     );
   }
 
@@ -60,6 +108,7 @@ class GroupsSection extends StatelessWidget {
     BuildContext context, {
     required String emoji,
     required String name,
+    required String groupId,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -142,11 +191,3 @@ class GroupsSection extends StatelessWidget {
     );
   }
 }
-
-class _GroupData {
-  final String emoji;
-  final String name;
-
-  const _GroupData({required this.emoji, required this.name});
-}
-

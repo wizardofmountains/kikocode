@@ -1,34 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:coolicons/coolicons.dart';
+import '../providers/messages_providers.dart';
+import '../../domain/models/group.dart';
 import '../widgets/group_card.dart';
 
-class GroupSelectionScreen extends StatefulWidget {
+class GroupSelectionScreen extends ConsumerStatefulWidget {
   const GroupSelectionScreen({super.key});
 
   @override
-  State<GroupSelectionScreen> createState() => _GroupSelectionScreenState();
+  ConsumerState<GroupSelectionScreen> createState() =>
+      _GroupSelectionScreenState();
 }
 
-class _GroupSelectionScreenState extends State<GroupSelectionScreen> {
+class _GroupSelectionScreenState extends ConsumerState<GroupSelectionScreen> {
   final List<String> _selectedGroups = [];
 
-  // Mock data for groups
-  final List<Map<String, dynamic>> _groups = [
-    {'name': 'Sonnenscheingruppe', 'icon': '☀️', 'members': 15},
-    {'name': 'Regenbogengruppe', 'icon': '🌈', 'members': 18},
-    {'name': 'Sternengruppe', 'icon': '⭐', 'members': 16},
-    {'name': 'Mondgruppe', 'icon': '🌙', 'members': 14},
-    {'name': 'Wolkengruppe', 'icon': '☁️', 'members': 17},
-  ];
-
-  void _toggleGroupSelection(String groupName) {
+  void _toggleGroupSelection(String groupId) {
     setState(() {
-      if (_selectedGroups.contains(groupName)) {
-        _selectedGroups.remove(groupName);
+      if (_selectedGroups.contains(groupId)) {
+        _selectedGroups.remove(groupId);
       } else {
-        _selectedGroups.add(groupName);
+        _selectedGroups.add(groupId);
       }
     });
   }
@@ -42,6 +37,8 @@ class _GroupSelectionScreenState extends State<GroupSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final groupsAsync = ref.watch(groupsWithMemberCountsProvider);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5EFE0),
       appBar: AppBar(
@@ -88,19 +85,37 @@ class _GroupSelectionScreenState extends State<GroupSelectionScreen> {
 
           // Groups list
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(20),
-              itemCount: _groups.length,
-              itemBuilder: (context, index) {
-                final group = _groups[index];
-                return GroupCard(
-                  groupName: group['name'],
-                  groupIcon: group['icon'],
-                  memberCount: group['members'],
-                  isSelected: _selectedGroups.contains(group['name']),
-                  onTap: () => _toggleGroupSelection(group['name']),
-                );
-              },
+            child: groupsAsync.when(
+              data: (groups) => _buildGroupsList(groups),
+              loading: () => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              error: (error, stack) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 48,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Fehler beim Laden der Gruppen',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        color: Colors.red,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: () =>
+                          ref.invalidate(groupsWithMemberCountsProvider),
+                      child: const Text('Erneut versuchen'),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
 
@@ -145,5 +160,44 @@ class _GroupSelectionScreenState extends State<GroupSelectionScreen> {
       ),
     );
   }
-}
 
+  Widget _buildGroupsList(List<Group> groups) {
+    if (groups.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.group,
+              size: 64,
+              color: Colors.grey.shade400,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Keine Gruppen vorhanden',
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                color: Colors.grey.shade600,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(20),
+      itemCount: groups.length,
+      itemBuilder: (context, index) {
+        final group = groups[index];
+        return GroupCard(
+          groupName: group.name,
+          groupIcon: group.emoji,
+          memberCount: group.memberCount ?? 0,
+          isSelected: _selectedGroups.contains(group.id),
+          onTap: () => _toggleGroupSelection(group.id),
+        );
+      },
+    );
+  }
+}

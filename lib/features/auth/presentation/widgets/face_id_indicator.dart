@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Enum representing the state of Face ID authentication
@@ -69,7 +70,9 @@ class _FaceIdIndicatorState extends State<FaceIdIndicator>
   }
 
   void _playSuccessAnimation() {
+    debugPrint('FaceIdIndicator: Playing success animation');
     _controller.forward().then((_) {
+      debugPrint('FaceIdIndicator: Animation complete, calling callback');
       widget.onSuccessAnimationComplete?.call();
     });
   }

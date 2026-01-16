@@ -66,30 +66,51 @@ class _StartupScreenState extends ConsumerState<StartupScreen> {
     if (_hasNavigated || !mounted) return;
     _hasNavigated = true;
 
+    final biometricService = ref.read(biometricServiceProvider);
+    final secureCredentialService = ref.read(secureCredentialServiceProvider);
+
+    final isBiometricEnabled = await biometricService.isBiometricEnabled();
+    final isBiometricAvailable = await biometricService.isBiometricAvailable();
+    final hasStoredCredentials = await secureCredentialService.hasStoredCredentials();
+
+    // Debug logging
+    debugPrint('StartupScreen: user authenticated = ${user != null}');
+    debugPrint('StartupScreen: isBiometricEnabled = $isBiometricEnabled');
+    debugPrint('StartupScreen: isBiometricAvailable = $isBiometricAvailable');
+    debugPrint('StartupScreen: hasStoredCredentials = $hasStoredCredentials');
+
+    if (!mounted) return;
+
     if (user != null) {
       // User is authenticated - check biometric preference
-      final biometricService = ref.read(biometricServiceProvider);
-      final isBiometricEnabled = await biometricService.isBiometricEnabled();
-      final isBiometricAvailable = await biometricService.isBiometricAvailable();
+      final hasBiometricsEnrolled = await biometricService.hasBiometricsEnrolled();
+      debugPrint('StartupScreen: hasBiometricsEnrolled = $hasBiometricsEnrolled');
 
       if (!mounted) return;
 
       if (isBiometricEnabled && isBiometricAvailable) {
         // User has biometric enabled → go to biometric auth screen
+        debugPrint('StartupScreen: Navigating to /biometric (active session)');
         context.go('/biometric');
       } else {
         // User is authenticated but biometric not enabled → go to success screen
         // Fetch profile for username
         final profile = await ref.read(profileRepositoryProvider).getCurrentProfile();
         if (!mounted) return;
-        
+
         context.go('/auth-success', extra: {
           'username': profile?.name,
           'showFaceId': false,
         });
       }
+    } else if (hasStoredCredentials && isBiometricEnabled && isBiometricAvailable) {
+      // No active session but has stored credentials and biometric enabled
+      // Show biometric screen which will auto-login on success
+      debugPrint('StartupScreen: Navigating to /biometric (stored credentials)');
+      context.go('/biometric');
     } else {
-      // User is not authenticated → go to welcome
+      // User is not authenticated and no stored credentials → go to welcome
+      debugPrint('StartupScreen: Navigating to /welcome');
       context.go('/');
     }
   }

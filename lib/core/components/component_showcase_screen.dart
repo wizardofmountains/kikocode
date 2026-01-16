@@ -36,6 +36,7 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
               _buildSubsection('Inputs', _buildInputs()),
               _buildSubsection('Icons', _buildIcons()),
               _buildSubsection('Badges', _buildBadges()),
+              _buildSubsection('Avatars', _buildAvatars()),
             ],
           ),
           AppSpacing.v8,
@@ -231,6 +232,108 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
         const AppNotificationBadge(count: 5),
         const AppNotificationBadge(count: 99),
         const AppNotificationBadge(showDot: true),
+      ],
+    );
+  }
+
+  Widget _buildAvatars() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Size variants
+        Text('Sizes:', style: AppTypography.bodySmall),
+        AppSpacing.v2,
+        Wrap(
+          spacing: AppSpacing.spacing3,
+          runSpacing: AppSpacing.spacing3,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: const [
+            AppAvatar(
+              initials: 'SM',
+              size: AppAvatarSize.small,
+            ),
+            AppAvatar(
+              initials: 'MD',
+              size: AppAvatarSize.medium,
+            ),
+            AppAvatar(
+              initials: 'LG',
+              size: AppAvatarSize.large,
+            ),
+            AppAvatar(
+              initials: 'XL',
+              size: AppAvatarSize.xlarge,
+            ),
+            AppAvatar(
+              initials: 'XXL',
+              size: AppAvatarSize.xxlarge,
+            ),
+          ],
+        ),
+        AppSpacing.v4,
+
+        // Network image
+        Text('Network Image:', style: AppTypography.bodySmall),
+        AppSpacing.v2,
+        const AppAvatar(
+          imageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
+          size: AppAvatarSize.xlarge,
+        ),
+        AppSpacing.v4,
+
+        // With online indicator
+        Text('Online Indicator:', style: AppTypography.bodySmall),
+        AppSpacing.v2,
+        Wrap(
+          spacing: AppSpacing.spacing3,
+          children: const [
+            AppAvatar(
+              initials: 'ON',
+              size: AppAvatarSize.large,
+              showOnlineIndicator: true,
+              isOnline: true,
+            ),
+            AppAvatar(
+              initials: 'OFF',
+              size: AppAvatarSize.large,
+              showOnlineIndicator: true,
+              isOnline: false,
+            ),
+          ],
+        ),
+        AppSpacing.v4,
+
+        // Editable avatar
+        Text('Editable:', style: AppTypography.bodySmall),
+        AppSpacing.v2,
+        AppAvatarEditable(
+          avatar: const AppAvatar(
+            initials: 'ED',
+            size: AppAvatarSize.xlarge,
+          ),
+          onEditTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Edit avatar tapped')),
+            );
+          },
+        ),
+        AppSpacing.v4,
+
+        // Avatar group
+        Text('Avatar Group:', style: AppTypography.bodySmall),
+        AppSpacing.v2,
+        const AppAvatarGroup(
+          avatars: [
+            AppAvatarConfig(initials: 'AB'),
+            AppAvatarConfig(initials: 'CD'),
+            AppAvatarConfig(initials: 'EF'),
+            AppAvatarConfig(initials: 'GH'),
+            AppAvatarConfig(initials: 'IJ'),
+            AppAvatarConfig(initials: 'KL'),
+          ],
+          maxDisplay: 4,
+          size: AppAvatarSize.medium,
+        ),
       ],
     );
   }

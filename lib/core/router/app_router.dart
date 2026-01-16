@@ -52,8 +52,17 @@ final GoRouter appRouter = GoRouter(
           path: '/loading',
           name: 'loading',
           builder: (context, state) {
-            final username = state.extra as String? ?? 'User';
-            return LoadingScreen(username: username);
+            // Support both simple string (username) and map parameters
+            final extra = state.extra;
+            if (extra is String) {
+              return LoadingScreen(username: extra);
+            }
+            final params = extra as Map<String, dynamic>?;
+            return LoadingScreen(
+              username: params?['username'] as String?,
+              showFaceId: params?['showFaceId'] as bool? ?? false,
+              showLoadingPhase: params?['showLoadingPhase'] as bool? ?? false,
+            );
           },
         ),
         GoRoute(
@@ -65,8 +74,9 @@ final GoRouter appRouter = GoRouter(
           path: '/auth-success',
           name: 'auth-success',
           builder: (context, state) {
+            // Use unified LoadingScreen (AuthSuccessScreen functionality merged)
             final extra = state.extra as Map<String, dynamic>?;
-            return AuthSuccessScreen(
+            return LoadingScreen(
               username: extra?['username'] as String?,
               showFaceId: extra?['showFaceId'] as bool? ?? false,
             );
@@ -113,6 +123,10 @@ final GoRouter appRouter = GoRouter(
               initialMessages: extra?['messages'] as List<Map<String, dynamic>>?,
               isGroupChat: extra?['isGroupChat'] ?? true,
               childName: extra?['childName'] as String?,
+              childId: extra?['childId'] as String?,
+              conversationId: extra?['conversationId'] as String?,
+              eventId: extra?['eventId'] as String?,
+              groupMessageId: extra?['groupMessageId'] as String?,
               parentNames: extra?['parentNames'] as String?,
             );
           },

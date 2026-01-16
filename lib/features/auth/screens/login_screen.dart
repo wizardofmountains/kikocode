@@ -24,12 +24,54 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   // Validation state
   String? _emailError;
   String? _passwordError;
   bool _isLoading = false;
-  
+
+  // Biometric login state
+  bool _canUseBiometric = false;
+  String _biometricTypeName = 'Biometrie';
+
+  @override
+  void initState() {
+    super.initState();
+    _checkBiometricAvailability();
+  }
+
+  Future<void> _checkBiometricAvailability() async {
+    final biometricService = ref.read(biometricServiceProvider);
+    final secureCredentialService = ref.read(secureCredentialServiceProvider);
+
+    final hasCredentials = await secureCredentialService.hasStoredCredentials();
+    final isBiometricEnabled = await biometricService.isBiometricEnabled();
+    final isBiometricAvailable = await biometricService.isBiometricAvailable();
+
+    if (hasCredentials && isBiometricEnabled && isBiometricAvailable) {
+      final typeName = await biometricService.getBiometricTypeName();
+      if (mounted) {
+        setState(() {
+          _canUseBiometric = true;
+          _biometricTypeName = typeName;
+        });
+      }
+    }
+  }
+
+  Future<void> _handleBiometricLogin() async {
+    if (_isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+      _emailError = null;
+      _passwordError = null;
+    });
+
+    // Navigate to biometric screen which handles the full flow
+    context.go('/biometric');
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -205,12 +247,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       if (shouldEnable == true) {
         // Authenticate once to confirm setup
-        final authenticated = await biometricService.authenticate(
+        debugPrint('LoginScreen: User chose to enable biometric');
+        final result = await biometricService.authenticate(
           localizedReason: '$biometricName einrichten',
         );
-        
-        if (authenticated) {
+
+        debugPrint('LoginScreen: Biometric auth result = ${result.isSuccess}');
+        if (result.isSuccess) {
           await biometricService.setBiometricEnabled(true);
+          debugPrint('LoginScreen: Biometric enabled and saved!');
+
+          // Store credentials for future biometric login
+          final secureCredentialService = ref.read(secureCredentialServiceProvider);
+          await secureCredentialService.storeCredentials(
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+          );
+          debugPrint('LoginScreen: Credentials stored for biometric re-login');
+
+          // Verify it was saved
+          final verified = await biometricService.isBiometricEnabled();
+          debugPrint('LoginScreen: Verification - isBiometricEnabled = $verified');
         }
       }
     }
@@ -280,9 +337,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ),
             
-            // Password field - top 398px, left 22px
+            // Password field - top 405px, left 22px
             Positioned(
-              top: 398,
+              top: 405,
               left: 22,
               right: 22,
               child: AppInput(
@@ -322,7 +379,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               right: 0,
               child: Center(
                 child: SizedBox(
-                  width: 120,
+                  width: 150,
                   child: AppButton(
                     label: 'Anmelden',
                     onPressed: _isLoading ? () {} : _handleLogin,
@@ -333,6 +390,31 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
             ),
+
+            // Biometric login option - shown when available
+            if (_canUseBiometric)
+              Positioned(
+                top: 620,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: TextButton.icon(
+                    onPressed: _isLoading ? null : _handleBiometricLogin,
+                    icon: Icon(
+                      Icons.fingerprint,
+                      color: AppColors.primary,
+                      size: 24,
+                    ),
+                    label: Text(
+                      'Mit $_biometricTypeName anmelden',
+                      style: AppTypography.bodyBase.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
