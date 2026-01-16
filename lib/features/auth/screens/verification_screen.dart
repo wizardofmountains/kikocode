@@ -153,7 +153,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               right: 0,
               child: Center(
                 child: SizedBox(
-                  width: 120,
+                  width: 140,
                   child: AppButton(
                     label: 'Anmelden',
                     onPressed: _handleVerification,
