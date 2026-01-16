@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kikocode/features/auth/data/auth_repository.dart';
 import 'package:kikocode/features/auth/data/profile_repository.dart';
 import 'package:kikocode/core/services/biometric_service.dart';
+import 'package:kikocode/core/services/secure_credential_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 // ============================================================================
@@ -11,6 +12,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// Biometric Service Provider
 final biometricServiceProvider = Provider<BiometricService>((ref) {
   return BiometricService();
+});
+
+/// Secure Credential Service Provider
+final secureCredentialServiceProvider = Provider<SecureCredentialService>((ref) {
+  return SecureCredentialService();
 });
 
 // ============================================================================
@@ -95,15 +101,23 @@ final authStateProvider = StateNotifierProvider<AuthStateNotifier, AsyncValue<Us
   return AuthStateNotifier(
     ref.watch(authRepositoryProvider),
     ref.watch(profileRepositoryProvider),
+    ref.watch(secureCredentialServiceProvider),
+    ref.watch(biometricServiceProvider),
   );
 });
 
 class AuthStateNotifier extends StateNotifier<AsyncValue<User?>> {
   final AuthRepository _authRepository;
   final ProfileRepository _profileRepository;
+  final SecureCredentialService _secureCredentialService;
+  final BiometricService _biometricService;
 
-  AuthStateNotifier(this._authRepository, this._profileRepository) 
-      : super(const AsyncValue.loading()) {
+  AuthStateNotifier(
+    this._authRepository,
+    this._profileRepository,
+    this._secureCredentialService,
+    this._biometricService,
+  ) : super(const AsyncValue.loading()) {
     _init();
   }
 
@@ -149,11 +163,27 @@ class AuthStateNotifier extends StateNotifier<AsyncValue<User?>> {
     }
   }
 
-  /// Sign out
+  /// Sign out (keeps stored credentials for biometric re-login)
   Future<void> signOut() async {
     state = const AsyncValue.loading();
     try {
       await _authRepository.signOut();
+      // DON'T clear credentials - they're needed for biometric re-login
+      state = const AsyncValue.data(null);
+    } catch (e, stackTrace) {
+      state = AsyncValue.error(e, stackTrace);
+    }
+  }
+
+  /// Sign out and forget all stored credentials
+  /// Use this for "logout from all devices" or when user wants to fully disconnect
+  Future<void> signOutAndForget() async {
+    state = const AsyncValue.loading();
+    try {
+      await _authRepository.signOut();
+      // Clear all stored credentials and biometric settings
+      await _secureCredentialService.clearCredentials();
+      await _biometricService.setBiometricEnabled(false);
       state = const AsyncValue.data(null);
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);

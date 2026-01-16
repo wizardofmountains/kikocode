@@ -153,7 +153,7 @@ class DevNavigationOverlay extends ConsumerWidget {
                         if (value == '_logout') {
                           await ref.read(authStateProvider.notifier).signOut();
                           if (context.mounted) {
-                            context.go('/');
+                            context.go('/login');
                           }
                         } else {
                           context.go(value);

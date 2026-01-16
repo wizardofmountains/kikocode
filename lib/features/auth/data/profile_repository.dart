@@ -4,30 +4,36 @@ import 'package:kikocode/core/config/supabase_config.dart';
 /// Model representing a user profile
 class UserProfile {
   final String id;
-  final String username;
-  final String? displayName;
+  final String? email;
+  final String? fullName;
   final String? avatarUrl;
+  final String role;
+  final String? phone;
   final DateTime createdAt;
   final DateTime updatedAt;
 
   const UserProfile({
     required this.id,
-    required this.username,
-    this.displayName,
+    this.email,
+    this.fullName,
     this.avatarUrl,
+    required this.role,
+    this.phone,
     required this.createdAt,
     required this.updatedAt,
   });
 
-  /// The name to display in the UI (displayName if available, otherwise username)
-  String get name => displayName ?? username;
+  /// The name to display in the UI
+  String get name => fullName ?? email ?? '';
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
       id: json['id'] as String,
-      username: (json['username'] as String?) ?? '',
-      displayName: json['display_name'] as String?,
+      email: json['email'] as String?,
+      fullName: json['full_name'] as String?,
       avatarUrl: json['avatar_url'] as String?,
+      role: (json['role'] as String?) ?? 'parent',
+      phone: json['phone'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
@@ -36,9 +42,11 @@ class UserProfile {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'username': username,
-      'display_name': displayName,
+      'email': email,
+      'full_name': fullName,
       'avatar_url': avatarUrl,
+      'role': role,
+      'phone': phone,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
@@ -46,17 +54,21 @@ class UserProfile {
 
   UserProfile copyWith({
     String? id,
-    String? username,
-    String? displayName,
+    String? email,
+    String? fullName,
     String? avatarUrl,
+    String? role,
+    String? phone,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return UserProfile(
       id: id ?? this.id,
-      username: username ?? this.username,
-      displayName: displayName ?? this.displayName,
+      email: email ?? this.email,
+      fullName: fullName ?? this.fullName,
       avatarUrl: avatarUrl ?? this.avatarUrl,
+      role: role ?? this.role,
+      phone: phone ?? this.phone,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -97,16 +109,18 @@ class ProfileRepository {
   /// Create a new profile
   Future<UserProfile> createProfile({
     required String userId,
-    required String username,
-    String? displayName,
+    String? email,
+    String? fullName,
     String? avatarUrl,
+    String role = 'parent',
   }) async {
     final now = DateTime.now();
     final data = {
       'id': userId,
-      'username': username,
-      'display_name': displayName ?? username,
+      'email': email,
+      'full_name': fullName,
       'avatar_url': avatarUrl,
+      'role': role,
       'created_at': now.toIso8601String(),
       'updated_at': now.toIso8601String(),
     };
@@ -122,9 +136,9 @@ class ProfileRepository {
 
   /// Update the current user's profile
   Future<UserProfile> updateProfile({
-    String? username,
-    String? displayName,
+    String? fullName,
     String? avatarUrl,
+    String? phone,
   }) async {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) {
@@ -135,9 +149,9 @@ class ProfileRepository {
       'updated_at': DateTime.now().toIso8601String(),
     };
 
-    if (username != null) updates['username'] = username;
-    if (displayName != null) updates['display_name'] = displayName;
+    if (fullName != null) updates['full_name'] = fullName;
     if (avatarUrl != null) updates['avatar_url'] = avatarUrl;
+    if (phone != null) updates['phone'] = phone;
 
     final response = await _client
         .from(_tableName)

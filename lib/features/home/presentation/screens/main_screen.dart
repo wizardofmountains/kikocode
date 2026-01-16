@@ -44,15 +44,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                     AppSpacing.v5,
 
                     // Greeting - centered
-                    Center(
-                      child: Text(
-                        'Hallo ${widget.username}, wie geht\'s Dir heute?',
-                        style: AppTypography.bodyBase.copyWith(
-                          fontWeight: AppTypography.semiBold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    _buildGreeting(),
                     AppSpacing.v3,
 
                     // Mood emoji selector - centered
@@ -218,6 +210,30 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildGreeting() {
+    final profileAsync = ref.watch(profileStreamProvider);
+    final profileName = profileAsync.whenOrNull(
+      data: (profile) => profile?.name,
+    );
+    // Use profile name if available, otherwise fallback to widget.username, then 'User'
+    String displayName = 'User';
+    if (profileName != null && profileName.isNotEmpty) {
+      displayName = profileName;
+    } else if (widget.username.isNotEmpty) {
+      displayName = widget.username;
+    }
+
+    return Center(
+      child: Text(
+        'Hallo $displayName, wie geht\'s Dir heute?',
+        style: AppTypography.bodyBase.copyWith(
+          fontWeight: AppTypography.semiBold,
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 

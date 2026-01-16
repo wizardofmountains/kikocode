@@ -5,12 +5,15 @@ import 'package:go_router/go_router.dart';
 import 'package:coolicons/coolicons.dart';
 import '../../../../core/design_system/colors.dart';
 import '../../../../core/design_system/kiko_typography.dart';
+import '../../../../core/components/atoms/app_avatar.dart';
 import '../widgets/message_composer_field.dart';
 import '../widgets/group_selection_field.dart';
 import '../widgets/subject_input_field.dart';
 import '../../domain/models/group.dart';
 import '../providers/messages_providers.dart';
 import '../../../home/presentation/widgets/bottom_nav_bar.dart';
+import '../../../auth/providers/auth_providers.dart';
+import '../../../auth/providers/avatar_providers.dart';
 
 /// Screen for composing a new message
 /// Features: Group selection, Subject selection, Message text area
@@ -292,6 +295,7 @@ class _MessagePageScreenState extends ConsumerState<MessagePageScreen> {
   @override
   Widget build(BuildContext context) {
     final groupsAsync = ref.watch(groupsProvider);
+    final profileAsync = ref.watch(currentProfileProvider);
 
     return Scaffold(
       backgroundColor: AppColors.surfaceBase,
@@ -330,18 +334,25 @@ class _MessagePageScreenState extends ConsumerState<MessagePageScreen> {
                   const Spacer(),
 
                   // Profile Picture
-                  Container(
-                    width: 75,
-                    height: 75,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.surfaceLow,
-                      image: const DecorationImage(
-                        image: NetworkImage(
-                          'http://localhost:3845/assets/65d3d9833026f2cd571bbbfb21edfa38e4d64489.png',
-                        ),
-                        fit: BoxFit.cover,
+                  profileAsync.when(
+                    data: (profile) => AppAvatar(
+                      imageUrl: profile?.avatarUrl?.networkUrl,
+                      assetPath: profile?.avatarUrl?.assetPath,
+                      initials: profile?.fullName,
+                      customSize: 75,
+                      backgroundColor: AppColors.surfaceLow,
+                    ),
+                    loading: () => Container(
+                      width: 75,
+                      height: 75,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.surfaceLow,
                       ),
+                    ),
+                    error: (e, s) => AppAvatar(
+                      customSize: 75,
+                      backgroundColor: AppColors.surfaceLow,
                     ),
                   ),
                 ],

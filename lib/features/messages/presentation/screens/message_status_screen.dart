@@ -5,12 +5,15 @@ import 'package:go_router/go_router.dart';
 import 'package:coolicons/coolicons.dart';
 import '../../../../core/design_system/colors.dart';
 import '../../../../core/design_system/kiko_typography.dart';
+import '../../../../core/components/atoms/app_avatar.dart';
 import '../providers/messages_providers.dart';
 import '../../domain/models/models.dart';
 import '../widgets/group_message_card.dart';
 import '../widgets/chat_list_item.dart';
 import '../widgets/message_fab.dart';
 import '../../../home/presentation/widgets/bottom_nav_bar.dart';
+import '../../../auth/providers/auth_providers.dart';
+import '../../../auth/providers/avatar_providers.dart';
 
 /// Main messages overview screen with group messages and chats
 /// Features: Custom header, group message status, individual chats, integrated tab bar
@@ -625,6 +628,7 @@ class _MessageStatusScreenState extends ConsumerState<MessageStatusScreen> {
   Widget build(BuildContext context) {
     final groupMessagesAsync = ref.watch(groupMessagesWithStatsProvider);
     final conversationsAsync = ref.watch(conversationsProvider);
+    final profileAsync = ref.watch(currentProfileProvider);
 
     return Scaffold(
       backgroundColor: AppColors.surfaceBase,
@@ -656,18 +660,25 @@ class _MessageStatusScreenState extends ConsumerState<MessageStatusScreen> {
                         const Spacer(),
 
                         // Profile Picture
-                        Container(
-                          width: 75,
-                          height: 75,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.surfaceLow,
-                            image: const DecorationImage(
-                              image: NetworkImage(
-                                'http://localhost:3845/assets/65d3d9833026f2cd571bbbfb21edfa38e4d64489.png',
-                              ),
-                              fit: BoxFit.cover,
+                        profileAsync.when(
+                          data: (profile) => AppAvatar(
+                            imageUrl: profile?.avatarUrl?.networkUrl,
+                            assetPath: profile?.avatarUrl?.assetPath,
+                            initials: profile?.fullName,
+                            customSize: 75,
+                            backgroundColor: AppColors.surfaceLow,
+                          ),
+                          loading: () => Container(
+                            width: 75,
+                            height: 75,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.surfaceLow,
                             ),
+                          ),
+                          error: (e, s) => AppAvatar(
+                            customSize: 75,
+                            backgroundColor: AppColors.surfaceLow,
                           ),
                         ),
                       ],

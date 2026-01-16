@@ -109,11 +109,14 @@ class _BiometricAuthScreenState extends ConsumerState<BiometricAuthScreen> {
     if (!mounted) return;
 
     if (result.isSuccess) {
+      debugPrint('BiometricAuthScreen: Biometric authentication SUCCESS');
       setState(() {
         _faceIdState = FaceIdState.success;
         _failedAttempts = 0;
       });
+      debugPrint('BiometricAuthScreen: State set to success, waiting for animation callback');
     } else {
+      debugPrint('BiometricAuthScreen: Biometric authentication FAILED: ${result.error}');
       _handleAuthFailure(result);
     }
   }
@@ -187,24 +190,76 @@ class _BiometricAuthScreenState extends ConsumerState<BiometricAuthScreen> {
   /// Called when the Face ID success animation in the indicator completes.
   /// We then transition into the shared `AuthSuccessScreen` to keep all
   /// greeting/home navigation logic in one place.
+  ///
+  /// If there's no active session but we have stored credentials, this will
+  /// auto-login using the stored credentials before navigating.
   Future<void> _onFaceIdSuccessAnimationComplete() async {
+    debugPrint('BiometricAuthScreen: Success animation complete callback triggered');
     if (!mounted) return;
 
-    String? username;
-    try {
-      final profile = await ref.read(currentProfileProvider.future);
-      username = profile?.name;
-    } catch (_) {
-      // Ignore profile load errors and fall back to null/default username.
+    // Check if we have an active session
+    final authRepository = ref.read(authRepositoryProvider);
+    final currentUser = authRepository.currentUser;
+    debugPrint('BiometricAuthScreen: currentUser = ${currentUser?.id}');
+
+    if (currentUser == null) {
+      // No active session - try to auto-login with stored credentials
+      debugPrint('BiometricAuthScreen: No active session, attempting auto-login');
+
+      final secureCredentialService = ref.read(secureCredentialServiceProvider);
+      final credentials = await secureCredentialService.getCredentials();
+
+      if (credentials != null) {
+        try {
+          // Sign in with stored credentials
+          await ref.read(authStateProvider.notifier).signIn(
+            email: credentials.email,
+            password: credentials.password,
+          );
+          debugPrint('BiometricAuthScreen: Auto-login successful');
+        } catch (e) {
+          debugPrint('BiometricAuthScreen: Auto-login failed: $e');
+          // If auto-login fails, clear credentials and go to login
+          await secureCredentialService.clearCredentials();
+          if (!mounted) return;
+          context.go('/login');
+          return;
+        }
+      } else {
+        // No credentials stored - shouldn't happen, but go to login
+        debugPrint('BiometricAuthScreen: No stored credentials found');
+        if (!mounted) return;
+        context.go('/login');
+        return;
+      }
     }
 
     if (!mounted) return;
 
+    String? username;
+    try {
+      debugPrint('BiometricAuthScreen: Fetching profile...');
+      // Fetch profile directly from repository to avoid StreamProvider blocking
+      final profileRepository = ref.read(profileRepositoryProvider);
+      final profile = await profileRepository.getCurrentProfile();
+      username = profile?.name;
+      debugPrint('BiometricAuthScreen: Profile fetched, username=$username');
+    } catch (e) {
+      debugPrint('BiometricAuthScreen: Profile fetch error: $e');
+      // Ignore profile load errors and fall back to null/default username.
+    }
+
+    if (!mounted) {
+      debugPrint('BiometricAuthScreen: Widget unmounted after profile fetch');
+      return;
+    }
+
+    debugPrint('BiometricAuthScreen: Navigating to /auth-success with username=$username');
     context.go(
       '/auth-success',
       extra: <String, dynamic>{
         'username': username,
-        'showFaceId': true,
+        'showFaceId': false, // Already showed success animation in BiometricAuthScreen
       },
     );
   }

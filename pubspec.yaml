@@ -52,6 +52,7 @@ dependencies:
   local_auth: ^2.3.0
   shared_preferences: ^2.3.5
   crypto: ^3.0.3
+  flutter_secure_storage: ^9.2.2
 
   # Avatar / Image handling
   cached_network_image: ^3.3.1
