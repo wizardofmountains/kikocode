@@ -10,9 +10,10 @@ class AppTypography {
   AppTypography._();
 
   // ============= Font Families =============
-  static String get primaryFont => GoogleFonts.inter().fontFamily!;
-  static String get displayFont => GoogleFonts.poppins().fontFamily!;
-  static String get monoFont => GoogleFonts.jetBrainsMono().fontFamily!;
+  // KIKO uses Nunito and Nunito Sans
+  static String get primaryFont => GoogleFonts.nunitoSans().fontFamily!;  // Body text
+  static String get displayFont => GoogleFonts.nunito().fontFamily!;      // Headings
+  static String get monoFont => GoogleFonts.jetBrainsMono().fontFamily!;  // Code (if needed)
 
   // ============= Font Weights =============
   static const FontWeight thin = FontWeight.w100;
@@ -296,6 +297,62 @@ class AppTypography {
         height: leadingNormal,
         letterSpacing: trackingNormal,
         decoration: TextDecoration.underline,
+      );
+
+  // ============= KIKO-Specific Styles (from Figma) =============
+  
+  /// Large Title: Nunito Bold 34px (used for "Hallo!" and "Hallo Anna!")
+  static TextStyle get largeTitle => TextStyle(
+        fontFamily: displayFont,
+        fontSize: 34.0,
+        fontWeight: bold,
+        height: 1.0,  // 100% line height from Figma
+        letterSpacing: 0.0,
+      );
+
+  /// Title 2: Nunito Bold 22px (used for "Kommunikation kinderleicht!")
+  static TextStyle get title2 => TextStyle(
+        fontFamily: displayFont,
+        fontSize: 22.0,
+        fontWeight: bold,
+        height: 1.0,
+        letterSpacing: 0.0,
+      );
+
+  /// Headline: Nunito Sans Bold 17px (used for button text)
+  static TextStyle get headline => TextStyle(
+        fontFamily: primaryFont,
+        fontSize: 17.0,
+        fontWeight: bold,
+        height: 1.0,
+        letterSpacing: 0.0,
+      );
+
+  /// Body: Nunito Sans Regular 17px (used for input fields)
+  static TextStyle get body => TextStyle(
+        fontFamily: primaryFont,
+        fontSize: 17.0,
+        fontWeight: regular,
+        height: 1.0,
+        letterSpacing: 0.0,
+      );
+
+  /// Footnote: Nunito Sans Regular 13px (used for "Passwort vergessen?")
+  static TextStyle get footnote => TextStyle(
+        fontFamily: primaryFont,
+        fontSize: 13.0,
+        fontWeight: regular,
+        height: 1.0,
+        letterSpacing: 0.0,
+      );
+
+  /// Caption 2: Nunito Sans Regular 11px (used for field labels)
+  static TextStyle get caption2 => TextStyle(
+        fontFamily: primaryFont,
+        fontSize: 11.0,
+        fontWeight: regular,
+        height: 1.0,
+        letterSpacing: 0.0,
       );
 
   // ============= Helper Methods =============

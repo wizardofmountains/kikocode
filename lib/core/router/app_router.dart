@@ -1,21 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kikocode/features/auth/presentation/screens/welcome_screen.dart';
-import 'package:kikocode/features/auth/presentation/screens/login_screen.dart';
-import 'package:kikocode/features/auth/presentation/screens/verification_screen.dart';
-import 'package:kikocode/features/auth/presentation/screens/loading_screen.dart';
+import 'package:kikocode/features/auth/screens/screens.dart';
 import 'package:kikocode/features/home/presentation/screens/main_screen.dart';
 import 'package:kikocode/features/messages/presentation/screens/group_selection_screen.dart';
 import 'package:kikocode/features/messages/presentation/screens/message_page_screen.dart';
 import 'package:kikocode/features/messages/presentation/screens/message_screen.dart';
 import 'package:kikocode/features/messages/presentation/screens/message_status_screen.dart';
+import 'package:kikocode/features/startup/presentation/screens/startup_screen.dart';
 import 'package:kikocode/core/widgets/dev_navigation_overlay.dart';
 import 'package:kikocode/core/components/component_showcase_screen.dart';
 import 'package:kikocode/core/design_system/showcase_screen.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/startup',
   routes: [
     ShellRoute(
       builder: (context, state, child) {
@@ -27,29 +25,61 @@ final GoRouter appRouter = GoRouter(
       },
       routes: [
         GoRoute(
+          path: '/startup',
+          name: 'startup',
+          builder: (context, state) => const StartupScreen(),
+        ),
+        GoRoute(
           path: '/',
           name: 'welcome',
           builder: (context, state) => const WelcomeScreen(),
         ),
+        // Authentication routes
         GoRoute(
-          path: '/login',
+          path: '/auth/login',
           name: 'login',
           builder: (context, state) => const LoginScreen(),
         ),
         GoRoute(
-          path: '/verification',
+          path: '/auth/verification',
           name: 'verification',
-          builder: (context, state) => const VerificationScreen(),
+          builder: (context, state) {
+            final username = state.extra as String? ?? 'User';
+            return VerificationScreen(username: username);
+          },
         ),
         GoRoute(
-          path: '/loading',
+          path: '/auth/loading',
           name: 'loading',
-          builder: (context, state) => const LoadingScreen(),
+          builder: (context, state) {
+            final username = state.extra as String? ?? 'User';
+            return LoadingScreen(username: username);
+          },
         ),
+        GoRoute(
+          path: '/auth/biometric',
+          name: 'biometric-auth',
+          builder: (context, state) => const BiometricAuthScreen(),
+        ),
+        GoRoute(
+          path: '/auth/success',
+          name: 'auth-success',
+          builder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>?;
+            return AuthSuccessScreen(
+              username: extra?['username'] as String?,
+              showFaceId: extra?['showFaceId'] as bool? ?? false,
+            );
+          },
+        ),
+        // Main app routes
         GoRoute(
           path: '/home',
           name: 'home',
-          builder: (context, state) => const MainScreen(),
+          builder: (context, state) {
+            final username = state.extra as String? ?? 'User';
+            return MainScreen(username: username);
+          },
         ),
         GoRoute(
           path: '/group-selection',
@@ -87,7 +117,7 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: '/showcase/design-system',
           name: 'design-system-showcase',
-          builder: (context, state) => const DesignSystemShowcaseScreen(),
+          builder: (context, state) => const DesignSystemShowcase(),
         ),
       ],
     ),
@@ -98,4 +128,3 @@ final GoRouter appRouter = GoRouter(
     ),
   ),
 );
-

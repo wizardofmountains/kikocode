@@ -92,17 +92,21 @@ class _AppInputState extends State<AppInput> {
 
   @override
   Widget build(BuildContext context) {
-    final hasError = widget.errorText != null;
+    final hasError = widget.errorText != null && widget.errorText!.isNotEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.label != null) ...[
-          Text(
-            widget.label!,
-            style: AppTypography.labelBase.copyWith(
-              color: hasError ? AppColors.error : AppColors.textSecondary,
-              fontWeight: FontWeight.w500,
+        // Show error text as label when there's an error, otherwise show label
+        if (hasError || widget.label != null) ...[
+          Padding(
+            padding: const EdgeInsets.only(left: 20), // 20px left padding to match Figma (42px - 22px field margin)
+            child: Text(
+              hasError ? widget.errorText! : widget.label!,
+              style: AppTypography.caption2.copyWith( // Use Caption 2 (11px Nunito Sans Regular)
+                color: hasError ? AppColors.accentRed : AppColors.textSecondary,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
           AppSpacing.v2,
@@ -129,21 +133,28 @@ class _AppInputState extends State<AppInput> {
           decoration: InputDecoration(
             hintText: widget.hintText,
             helperText: widget.helperText,
-            errorText: widget.errorText,
+            // Don't show errorText below the field - we show it as label above
+            errorText: null,
+            errorStyle: const TextStyle(height: 0), // Hide error text space
             prefixIcon: widget.prefixIcon != null
                 ? Icon(widget.prefixIcon, size: _getIconSize(widget.size))
                 : null,
             suffixIcon: _buildSuffixIcon(),
             contentPadding: _getContentPadding(widget.size),
-            border: _buildBorder(false),
-            enabledBorder: _buildBorder(false),
-            focusedBorder: _buildBorder(true),
+            border: _buildBorder(false, error: hasError),
+            enabledBorder: _buildBorder(false, error: hasError),
+            focusedBorder: _buildBorder(true, error: hasError),
             errorBorder: _buildBorder(false, error: true),
             focusedErrorBorder: _buildBorder(true, error: true),
             filled: true,
             fillColor: widget.enabled
-                ? AppColors.surface
+                ? AppColors.surfaceHighest // Light beige (#FBF7EF) from Figma
                 : AppColors.backgroundSecondary,
+            hintStyle: AppTypography.body.copyWith(
+              color: hasError 
+                  ? AppColors.accentRed.withOpacity(0.4) // Accent/Red at 40% opacity for error state
+                  : AppColors.textTertiary, // Gray (#BFBFBF) for default placeholder
+            ),
           ),
         ),
       ],
@@ -169,14 +180,14 @@ class _AppInputState extends State<AppInput> {
 
   OutlineInputBorder _buildBorder(bool focused, {bool error = false}) {
     return OutlineInputBorder(
-      borderRadius: AppBorders.lg,
+      borderRadius: BorderRadius.circular(25), // KIKO rounded style: 25px from Figma
       borderSide: BorderSide(
         color: error
-            ? AppColors.error
+            ? AppColors.accentRed // Accent/Red (#FF383C) from Figma for error state
             : focused
-                ? AppColors.primary
-                : AppColors.border,
-        width: focused ? 2 : 1,
+                ? AppColors.secondary // Mint green (#9ED9C6) for focused/selected state
+                : AppColors.surfaceLow, // Beige (#EFDFBD) for default state
+        width: 2, // Always 2px border as per Figma design
       ),
     );
   }
@@ -184,11 +195,17 @@ class _AppInputState extends State<AppInput> {
   TextStyle _getTextStyle(AppInputSize size) {
     switch (size) {
       case AppInputSize.small:
-        return AppTypography.bodySmall;
+        return AppTypography.bodySmall.copyWith(
+          color: AppColors.textPrimary,
+        );
       case AppInputSize.medium:
-        return AppTypography.bodyBase;
+        return AppTypography.body.copyWith( // Use Figma's App/Body style (17px)
+          color: AppColors.textPrimary,
+        );
       case AppInputSize.large:
-        return AppTypography.bodyLarge;
+        return AppTypography.bodyLarge.copyWith(
+          color: AppColors.textPrimary,
+        );
     }
   }
 

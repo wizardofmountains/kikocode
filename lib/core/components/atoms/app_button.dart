@@ -17,10 +17,12 @@ enum AppButtonSize {
   large,
 }
 
-/// A reusable button component with consistent styling
+/// A reusable button component with consistent styling and smooth press animations
 /// 
 /// Supports multiple variants (primary, secondary, outline, ghost, danger)
 /// and sizes (small, medium, large).
+/// 
+/// Features smooth animations when transitioning from Default to On Click state.
 /// 
 /// Example:
 /// ```dart
@@ -31,7 +33,7 @@ enum AppButtonSize {
 ///   size: AppButtonSize.medium,
 /// )
 /// ```
-class AppButton extends StatelessWidget {
+class AppButton extends StatefulWidget {
   const AppButton({
     super.key,
     required this.label,
@@ -56,26 +58,84 @@ class AppButton extends StatelessWidget {
   final bool enabled;
 
   @override
-  Widget build(BuildContext context) {
-    final isEnabled = enabled && !loading;
-    final effectiveOnPressed = isEnabled ? onPressed : null;
+  State<AppButton> createState() => _AppButtonState();
+}
 
-    final buttonStyle = _getButtonStyle(variant, size);
-    final textStyle = _getTextStyle(size);
-    final iconSize = _getIconSize(size);
+class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _shadowAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    // Initialize animation controller for smooth press animation
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 100),
+      vsync: this,
+    );
+
+    // Scale animation: slightly shrink button when pressed
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+
+    // Shadow animation: reduce shadow when pressed
+    _shadowAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.3,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _handleTapDown(TapDownDetails details) {
+    if (widget.enabled && !widget.loading) {
+      _animationController.forward();
+    }
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    _animationController.reverse();
+  }
+
+  void _handleTapCancel() {
+    _animationController.reverse();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isEnabled = widget.enabled && !widget.loading;
+    final effectiveOnPressed = isEnabled ? widget.onPressed : null;
+
+    final buttonStyle = _getButtonStyle(widget.variant, widget.size);
+    final textStyle = _getTextStyle(widget.size);
+    final iconSize = _getIconSize(widget.size);
 
     Widget buttonChild = _buildButtonContent(
-      label: label,
-      icon: icon,
-      iconPosition: iconPosition,
+      label: widget.label,
+      icon: widget.icon,
+      iconPosition: widget.iconPosition,
       iconSize: iconSize,
       textStyle: textStyle,
-      loading: loading,
+      loading: widget.loading,
     );
 
     Widget button;
 
-    switch (variant) {
+    switch (widget.variant) {
       case AppButtonVariant.primary:
       case AppButtonVariant.danger:
         button = ElevatedButton(
@@ -107,7 +167,42 @@ class AppButton extends StatelessWidget {
         break;
     }
 
-    if (fullWidth) {
+    // Add animated glow effect for primary button (KIKO Main Button style from Figma)
+    if (widget.variant == AppButtonVariant.primary) {
+      button = AnimatedBuilder(
+        animation: _animationController,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(13),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primaryLight.withOpacity(_shadowAnimation.value),
+                    blurRadius: 8 * _shadowAnimation.value,
+                    spreadRadius: 2 * _shadowAnimation.value,
+                    offset: Offset(2 * _shadowAnimation.value, 2 * _shadowAnimation.value),
+                  ),
+                ],
+              ),
+              child: child,
+            ),
+          );
+        },
+        child: button,
+      );
+    }
+
+    // Wrap with GestureDetector to capture tap events for animation
+    button = GestureDetector(
+      onTapDown: _handleTapDown,
+      onTapUp: _handleTapUp,
+      onTapCancel: _handleTapCancel,
+      child: button,
+    );
+
+    if (widget.fullWidth) {
       return SizedBox(
         width: double.infinity,
         child: button,
@@ -120,17 +215,24 @@ class AppButton extends StatelessWidget {
   ButtonStyle _getButtonStyle(AppButtonVariant variant, AppButtonSize size) {
     final height = _getHeight(size);
     final padding = _getPadding(size);
-    final borderRadius = AppBorders.lg;
+    final borderRadius = BorderRadius.circular(13); // KIKO Main Button: 13px from Figma
 
     switch (variant) {
       case AppButtonVariant.primary:
         return ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
+          backgroundColor: AppColors.primary, // Purple (#A974C7)
+          foregroundColor: AppColors.surfaceHigh, // Beige text (#F7EFDE)
           minimumSize: Size(0, height),
           padding: padding,
-          shape: RoundedRectangleBorder(borderRadius: borderRadius),
+          shape: RoundedRectangleBorder(
+            borderRadius: borderRadius,
+            side: BorderSide(
+              color: AppColors.primaryLight, // Light purple border (#F5DDFF)
+              width: 2,
+            ),
+          ),
           elevation: 0,
+          shadowColor: AppColors.primaryLight,
         );
       case AppButtonVariant.secondary:
         return FilledButton.styleFrom(
@@ -173,7 +275,7 @@ class AppButton extends StatelessWidget {
       case AppButtonSize.small:
         return AppTypography.labelSmall.copyWith(fontWeight: FontWeight.w600);
       case AppButtonSize.medium:
-        return AppTypography.labelBase.copyWith(fontWeight: FontWeight.w600);
+        return AppTypography.headline; // Use Figma's App/Headline (Nunito Sans Bold 17px)
       case AppButtonSize.large:
         return AppTypography.labelLarge.copyWith(fontWeight: FontWeight.w600);
     }
@@ -184,7 +286,7 @@ class AppButton extends StatelessWidget {
       case AppButtonSize.small:
         return 36;
       case AppButtonSize.medium:
-        return 44;
+        return 50; // KIKO Main Button: 50px height from Figma
       case AppButtonSize.large:
         return 52;
     }
